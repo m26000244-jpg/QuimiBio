@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="QuimiBio">
-    <title>QuimiBio • Bachillerato UPAV (IA Gemini + Web 2.0/3.0/4.0)</title>
+    <title>QuimiBio • Bachillerato UPAV (Gemini 3.8 Flash)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -22,4 +22,28 @@
     <!-- ENCABEZADO -->
     <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-emerald-800 text-white p-4 shadow-lg">
         <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-3">
-            <div
+            <div class="flex items-center gap-3">
+                <div class="bg-white/15 p-2.5 rounded-xl border border-white/20 text-2xl">🧬</div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV v3.8</span>
+                    </h1>
+                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • Gemini 3.8 + Web 2.0/3.0/4.0</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="header-xp" class="bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-bold px-2.5 py-1 rounded-lg">⭐ 0 XP</span>
+                <select id="sede-select" onchange="filterPosts()" class="bg-blue-950/60 border border-blue-400/30 text-white text-xs rounded-lg px-3 py-1.5">
+                    <option value="Todas">Todas las Sedes UPAV</option>
+                    <option value="Xalapa" selected>Sede Xalapa Sabatino</option>
+                    <option value="Veracruz">Sede Veracruz Puerto</option>
+                    <option value="Córdoba">Sede Córdoba</option>
+                    <option value="Coatepec">Sede Coatepec</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="bg-white shadow-sm sticky top-0 z-20 border-b border-slate-200">
+        <div class="max-w-5xl mx
