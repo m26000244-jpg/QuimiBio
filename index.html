@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="QuimiBio">
-    <title>QuimiBio • Bachillerato UPAV (IA Rápida)</title>
+    <title>QuimiBio • Bachillerato UPAV (Streaming en Vivo)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -25,9 +25,9 @@
                 <div class="bg-white/15 p-2.5 rounded-xl border border-white/20 text-2xl">🧬</div>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
-                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV v3.9 Turbo</span>
+                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV v4.0 Live</span>
                     </h1>
-                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • IA Multi-Modelo + Web 2.0/3.0/4.0</p>
+                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • Gemini Streaming + Web 2.0/3.0/4.0</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -117,8 +117,8 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col">
                     <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
                         <div>
-                            <h2 class="text-lg font-bold text-blue-900 flex items-center gap-1.5">🧠 Profesor IA (Gemini Turbo)</h2>
-                            <p id="gemini-status-badge" class="text-[11px] text-amber-700 font-medium">Modo Local • Conecta tu API Key de Gemini para respuestas ilimitadas</p>
+                            <h2 class="text-lg font-bold text-blue-900 flex items-center gap-1.5">🧠 Profesor IA (Gemini Live)</h2>
+                            <p id="gemini-status-badge" class="text-[11px] text-amber-700 font-medium">Modo Local • Conecta tu API Key para respuestas en vivo</p>
                         </div>
                         <button onclick="toggleApiPanel()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 px-2.5 py-1.5 rounded-lg font-semibold">
                             🔑 API Key
@@ -126,7 +126,7 @@
                     </div>
 
                     <div id="api-key-panel" class="hidden mb-3 p-3 bg-slate-100 rounded-xl border border-slate-300 text-xs space-y-2">
-                        <p class="text-slate-700">Pega tu clave de <strong>Google AI Studio</strong> (<code>AQ...</code> o <code>AIza...</code>). Se guarda solo en tu navegador:</p>
+                        <p class="text-slate-700">Pega tu clave de <strong>Google AI Studio</strong> (<code>AIza...</code>). Se guarda solo en tu navegador:</p>
                         <div class="flex gap-2">
                             <input type="password" id="gemini-api-input" placeholder="Pega tu clave aquí..." class="flex-1 border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-mono">
                             <button onclick="saveApiKey()" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-semibold">Guardar</button>
@@ -136,7 +136,7 @@
 
                     <div id="chat-box" class="h-52 overflow-y-auto bg-slate-50 p-3 rounded-xl border space-y-2.5 text-xs mb-3">
                         <div class="bg-blue-100 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[90%]">
-                            <strong>Profesor IA:</strong> ¡Hola! Soy tu asesor virtual de Química y Bioquímica de la UPAV (Modo Multi-Servidor Rápido). Pregúntame cualquier tema, ejercicio o fórmula química.
+                            <strong>Profesor IA:</strong> ¡Hola! Soy tu asesor virtual de Química y Bioquímica de la UPAV (Conexión directa en tiempo real). Pregúntame cualquier tema, ejercicio o fórmula química.
                         </div>
                     </div>
 
@@ -377,7 +377,7 @@
         checkBalance();
 
         // ==========================================
-        // CONEXIÓN MULTI-MODELO TURBO (SIN ERRORES DE SATURACIÓN)
+        // CONEXIÓN DIRECTA EN STREAMING (TIEMPO REAL COMO ESTE CHAT)
         // ==========================================
         let chatHistory = [];
         function isValidKey(key) { return key && key.trim().length > 15; }
@@ -387,10 +387,10 @@
             const badge = document.getElementById('gemini-status-badge');
             if (isValidKey(key)) {
                 badge.className = "text-[11px] text-emerald-700 font-bold";
-                badge.innerText = "🟢 Conectado a Google Gemini (Auto-Balanceo Rápido)";
+                badge.innerText = "🟢 Conectado Directo a Gemini 2.5 Flash (Streaming en Vivo)";
             } else {
                 badge.className = "text-[11px] text-amber-700 font-medium";
-                badge.innerText = "🟡 Modo Local • Haz clic en 'API Key' para activar Gemini";
+                badge.innerText = "🟡 Modo Local • Haz clic en 'API Key' para activar Gemini en Vivo";
             }
         }
         updateGeminiStatus();
@@ -407,7 +407,7 @@
                 localStorage.setItem('quimibio_gemini_key', val);
                 updateGeminiStatus();
                 document.getElementById('api-key-panel').classList.add('hidden');
-                appendChat("Profesor IA", "¡Listo! Ya estoy conectado en modo rápido multi-modelo. Haz tu pregunta.");
+                appendChat("Profesor IA", "¡Conectado en tiempo real! Escribe cualquier pregunta y verás la respuesta aparecer al instante.");
             } else {
                 alert("Por favor pega una clave de API válida de Google AI Studio.");
             }
@@ -417,6 +417,13 @@
             localStorage.removeItem('quimibio_gemini_key');
             document.getElementById('gemini-api-input').value = '';
             updateGeminiStatus();
+        }
+
+        function formatMarkdown(txt) {
+            return txt
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
         }
 
         function appendChat(sender, htmlText, isUser = false) {
@@ -439,10 +446,11 @@
         async function sendMessage() {
             const inp = document.getElementById('user-input');
             const btn = document.getElementById('send-btn');
+            const chat = document.getElementById('chat-box');
             const text = inp.value.trim();
             if (!text) return;
 
-            appendChat("Tú", text, true);
+            appendChat("Tú", formatMarkdown(text), true);
             inp.value = '';
             btn.disabled = true;
             btn.innerText = "...";
@@ -450,57 +458,78 @@
             const apiKey = (localStorage.getItem('quimibio_gemini_key') || '').trim();
 
             if (isValidKey(apiKey)) {
-                const loadingBubble = appendChat("Profesor IA", "⚡ Buscando respuesta rápida...");
-                const systemPrompt = "Eres un profesor de Química y Bioquímica para bachillerato de la UPAV. Responde en español de forma clara, directa y concisa (máximo 3 párrafos cortos) para que el estudiante comprenda rápido.";
+                const bubble = appendChat("Profesor IA", "▌");
+                const systemPrompt = "Eres un profesor de Química y Bioquímica para bachillerato de la UPAV. Responde en español de forma clara, directa y concisa (máximo 3 párrafos cortos).";
                 chatHistory.push({ role: "user", parts: [{ text: text }] });
 
-                // Lista de respaldo automático: si uno tiene alta demanda o tarda, salta al siguiente
-                const models = ["gemini-3.8-flash-lite", "gemini-2.5-flash", "gemini-3.8-flash", "gemini-2.5-flash-lite"];
-                let successData = null;
-                let lastErrorMsg = "";
+                // Conexión directa vía SSE Streaming al modelo estable de baja latencia
+                const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+                let streamedFullText = "";
+                let connected = false;
+                let lastError = "";
 
                 for (const model of models) {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seg máximo por modelo
                     try {
-                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            signal: controller.signal,
                             body: JSON.stringify({
                                 systemInstruction: { parts: [{ text: systemPrompt }] },
                                 contents: chatHistory.slice(-4),
-                                generationConfig: { maxOutputTokens: 450, temperature: 0.5 }
+                                generationConfig: { temperature: 0.5, maxOutputTokens: 500 }
                             })
                         });
-                        clearTimeout(timeoutId);
-                        const data = await response.json();
-                        if (!data.error && data.candidates && data.candidates[0]) {
-                            successData = data;
-                            break; // ¡Éxito! Detiene el ciclo inmediatamente
-                        } else if (data.error) {
-                            lastErrorMsg = data.error.message;
+
+                        if (!response.ok) {
+                            const errJson = await response.json().catch(() => ({}));
+                            lastError = errJson.error?.message || `Error HTTP ${response.status}`;
+                            continue;
                         }
+
+                        connected = true;
+                        const reader = response.body.getReader();
+                        const decoder = new TextDecoder("utf-8");
+                        let buffer = "";
+
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            buffer += decoder.decode(value, { stream: true });
+                            const lines = buffer.split("\n");
+                            buffer = lines.pop();
+
+                            for (const line of lines) {
+                                if (line.startsWith("data: ")) {
+                                    const jsonStr = line.slice(6).trim();
+                                    if (!jsonStr || jsonStr === "[DONE]") continue;
+                                    try {
+                                        const chunk = JSON.parse(jsonStr);
+                                        const piece = chunk.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                                        if (piece) {
+                                            streamedFullText += piece;
+                                            bubble.innerHTML = `<strong>Profesor IA:</strong> ${formatMarkdown(streamedFullText)} ▌`;
+                                            chat.scrollTop = chat.scrollHeight;
+                                        }
+                                    } catch (_) {}
+                                }
+                            }
+                        }
+                        break;
                     } catch (e) {
-                        clearTimeout(timeoutId);
-                        lastErrorMsg = e.name === 'AbortError' ? "Tiempo de espera agotado" : e.message;
+                        lastError = e.message;
                     }
                 }
 
-                if (successData) {
-                    const rawReply = successData.candidates[0].content.parts[0].text;
-                    const replyText = rawReply
-                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/\n/g, '<br>');
-                    chatHistory.push({ role: "model", parts: [{ text: rawReply }] });
-                    loadingBubble.innerHTML = `<strong>Profesor IA:</strong> ${replyText}`;
+                if (connected && streamedFullText) {
+                    bubble.innerHTML = `<strong>Profesor IA:</strong> ${formatMarkdown(streamedFullText)}`;
+                    chatHistory.push({ role: "model", parts: [{ text: streamedFullText }] });
                 } else {
-                    loadingBubble.innerHTML = `<strong>⚠️ Los servidores de Google están ocupados en este instante:</strong> ${lastErrorMsg}. Intenta enviar tu pregunta nuevamente en unos segundos.`;
+                    bubble.innerHTML = `<strong>⚠️ No se pudo conectar:</strong> ${lastError}. Verifica que tu API Key de Google AI Studio sea válida.`;
                 }
             } else {
                 setTimeout(() => {
                     appendChat("Profesor IA (Local)", `Haz clic en <strong>🔑 API Key</strong> y pega tu clave de Google AI Studio para activar las respuestas.`);
-                }, 300);
+                }, 250);
             }
 
             btn.disabled = false;
