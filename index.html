@@ -402,8 +402,8 @@
             if (isValidKey(key)) {
                 badge.className = "text-[11px] text-emerald-700 font-bold";
                 badge.innerText = searchOn
-                    ? "🟢 Conectado a Gemini 2.5 Flash • Streaming + Búsqueda Google"
-                    : "🟢 Conectado a Gemini 2.5 Flash • Streaming en Vivo";
+                    ? "🟢 Conectado a Gemini 3.8 Flash • Streaming + Búsqueda Google"
+                    : "🟢 Conectado a Gemini 3.8 Flash • Streaming en Vivo";
             } else {
                 badge.className = "text-[11px] text-amber-700 font-medium";
                 badge.innerText = "🟡 Modo Local • Haz clic en 'API Key' para activar Gemini en Vivo";
@@ -498,7 +498,7 @@
         }
 
         async function streamGeminiResponse(apiKey, useSearch, bodyEl) {
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`;
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`;
             const payload = {
                 system_instruction: {
                     parts: [{
@@ -660,7 +660,7 @@
         }
 
         function buildRandomQuestion() {
-            const moles = Math.floor(Math.random() * 4) + 2; // 2 a 5 moles
+            const moles = Math.floor(Math.random() * 4) + 2;
             const h2oMass = 18.015;
             const totalGrams = (moles * h2oMass).toFixed(1);
             const correctAns = `${moles} mol de H₂O`;
