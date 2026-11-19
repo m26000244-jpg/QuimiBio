@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="QuimiBio">
-    <title>QuimiBio • Bachillerato UPAV</title>
+    <title>QuimiBio • Bachillerato UPAV (IA Gemini + Web 2.0/3.0/4.0)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -18,34 +18,49 @@
     </style>
 </head>
 <body class="text-slate-800 pb-12">
+
+    <!-- ENCABEZADO -->
     <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-emerald-800 text-white p-4 shadow-lg">
         <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-3">
             <div class="flex items-center gap-3">
                 <div class="bg-white/15 p-2.5 rounded-xl border border-white/20 text-2xl">🧬</div>
                 <div>
-                    <h1 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV</span></h1>
-                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • Web 2.0 / 3.0 / 4.0</p>
+                    <h1 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV</span>
+                    </h1>
+                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • IA Gemini + Web 2.0/3.0/4.0</p>
                 </div>
             </div>
-            <select id="sede-select" onchange="filterPosts()" class="bg-blue-950/60 border border-blue-400/30 text-white text-xs rounded-lg px-3 py-1.5">
-                <option value="Todas">Todas las Sedes UPAV</option>
-                <option value="Xalapa" selected>Sede Xalapa Sabatino</option>
-                <option value="Veracruz">Sede Veracruz Puerto</option>
-                <option value="Córdoba">Sede Córdoba</option>
-            </select>
+            <div class="flex items-center gap-2">
+                <span id="header-xp" class="bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-bold px-2.5 py-1 rounded-lg">⭐ 0 XP</span>
+                <select id="sede-select" onchange="filterPosts()" class="bg-blue-950/60 border border-blue-400/30 text-white text-xs rounded-lg px-3 py-1.5">
+                    <option value="Todas">Todas las Sedes UPAV</option>
+                    <option value="Xalapa" selected>Sede Xalapa Sabatino</option>
+                    <option value="Veracruz">Sede Veracruz Puerto</option>
+                    <option value="Córdoba">Sede Córdoba</option>
+                    <option value="Coatepec">Sede Coatepec</option>
+                </select>
+            </div>
         </div>
     </header>
 
+    <!-- NAVEGACIÓN -->
     <nav class="bg-white shadow-sm sticky top-0 z-20 border-b border-slate-200">
         <div class="max-w-5xl mx-auto grid grid-cols-3 text-xs sm:text-sm font-medium">
-            <button onclick="switchTab('web4')" id="btn-web4" class="tab-btn tab-active py-3.5 px-2">🤖 Web 4.0: Lab 3D & IA</button>
-            <button onclick="switchTab('web3')" id="btn-web3" class="tab-btn text-slate-500 py-3.5 px-2">🔗 Web 3.0: Ruta & Insignias</button>
+            <button onclick="switchTab('web4')" id="btn-web4" class="tab-btn tab-active py-3.5 px-2">🤖 Web 4.0: Lab 3D & Gemini</button>
+            <button onclick="switchTab('web3')" id="btn-web3" class="tab-btn text-slate-500 py-3.5 px-2">🔗 Web 3.0: Retos & Insignias</button>
             <button onclick="switchTab('web2')" id="btn-web2" class="tab-btn text-slate-500 py-3.5 px-2">👥 Web 2.0: Comunidad</button>
         </div>
     </nav>
 
     <main class="max-w-5xl mx-auto p-4 mt-2 space-y-6">
+
+        <!-- ========================================================= -->
+        <!-- PESTAÑA 1: WEB 4.0 (LAB 3D Y TUTOR IA GEMINI REAL)        -->
+        <!-- ========================================================= -->
         <section id="tab-web4" class="space-y-6">
+            
+            <!-- Modelador Molecular 3D -->
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
                     <div>
@@ -83,73 +98,140 @@
                     <div><span class="text-slate-400 block">Masa Molar</span><strong id="info-mass" class="text-emerald-700">180.16 g/mol</strong></div>
                     <div><span class="text-slate-400 block">Geometría</span><strong id="info-geom" class="text-blue-900">Anillo Cíclico</strong></div>
                 </div>
+                <div class="mt-3 flex justify-end">
+                    <button onclick="askTutorAboutMolecule()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg font-semibold flex items-center gap-1.5 shadow-sm">
+                        <span>✨</span> Preguntar a Gemini sobre esta molécula
+                    </button>
+                </div>
             </div>
 
+            <!-- Grid inferior: Estequiometría + Profesor IA Gemini -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                    <h2 class="text-lg font-bold text-blue-900 mb-2">⚖️ Laboratorio de Estequiometría</h2>
-                    <div class="bg-slate-50 p-4 rounded-xl border text-center my-2 flex flex-wrap items-center justify-center gap-2 font-mono font-bold">
-                        <input type="number" id="c1" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>C₃H₈ +</span>
-                        <input type="number" id="c2" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>O₂ ➔</span>
-                        <input type="number" id="c3" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>CO₂ +</span>
-                        <input type="number" id="c4" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>H₂O</span>
+                
+                <!-- Estequiometría -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-blue-900 mb-1">⚖️ Laboratorio de Estequiometría</h2>
+                        <p class="text-xs text-slate-500 mb-3">Ajusta los coeficientes para balancear la combustión del propano:</p>
+                        <div class="bg-slate-50 p-4 rounded-xl border text-center my-2 flex flex-wrap items-center justify-center gap-2 font-mono font-bold">
+                            <input type="number" id="c1" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>C₃H₈ +</span>
+                            <input type="number" id="c2" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>O₂ ➔</span>
+                            <input type="number" id="c3" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>CO₂ +</span>
+                            <input type="number" id="c4" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>H₂O</span>
+                        </div>
+                        <div id="balance-table" class="mt-3 text-xs space-y-1.5"></div>
                     </div>
-                    <div id="balance-table" class="mt-3 text-xs space-y-1.5"></div>
                     <div id="balance-status" class="mt-3 p-3 rounded-xl text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200"></div>
                 </div>
 
+                <!-- Tutor IA conectado a Gemini -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col">
-                    <h2 class="text-lg font-bold text-blue-900 mb-2">🧠 Tutor Socrático QuimiBio (IA)</h2>
-                    <div id="chat-box" class="h-48 overflow-y-auto bg-slate-50 p-3 rounded-xl border space-y-2 text-xs mb-3">
-                        <div class="bg-blue-100 text-blue-950 p-3 rounded-xl"><strong>Tutor IA:</strong> ¡Hola! ¿Qué tema de Química o Bioquímica de tu guía UPAV quieres repasar hoy?</div>
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+                        <div>
+                            <h2 class="text-lg font-bold text-blue-900 flex items-center gap-1.5">🧠 Profesor IA (Gemini)</h2>
+                            <p id="gemini-status-badge" class="text-[11px] text-amber-700 font-medium">Modo Local • Conecta tu API Key de Gemini para respuestas ilimitadas</p>
+                        </div>
+                        <button onclick="toggleApiPanel()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 px-2.5 py-1.5 rounded-lg font-semibold">
+                            🔑 API Key
+                        </button>
                     </div>
+
+                    <!-- Panel oculto para pegar API Key de Gemini -->
+                    <div id="api-key-panel" class="hidden mb-3 p-3 bg-slate-100 rounded-xl border border-slate-300 text-xs space-y-2">
+                        <p class="text-slate-700">Pega tu clave gratuita de <strong>Google AI Studio</strong> (<code>AIza...</code>). Se guarda solo en tu navegador:</p>
+                        <div class="flex gap-2">
+                            <input type="password" id="gemini-api-input" placeholder="AIzaSy..." class="flex-1 border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-mono">
+                            <button onclick="saveApiKey()" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-semibold">Guardar</button>
+                            <button onclick="clearApiKey()" class="bg-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg">Borrar</button>
+                        </div>
+                    </div>
+
+                    <div id="chat-box" class="h-52 overflow-y-auto bg-slate-50 p-3 rounded-xl border space-y-2.5 text-xs mb-3">
+                        <div class="bg-blue-100 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[90%]">
+                            <strong>Profesor IA:</strong> ¡Hola! Soy tu asesor virtual de Química y Bioquímica de la UPAV. Pregúntame cualquier tema, ejercicio de tu guía o fórmula química y lo resolveremos paso a paso.
+                        </div>
+                    </div>
+
                     <div class="flex gap-2 mt-auto">
-                        <input type="text" id="user-input" onkeypress="if(event.key==='Enter') sendMessage()" placeholder="Escribe tu duda..." class="flex-1 border rounded-xl px-3 py-2 text-xs">
-                        <button onclick="sendMessage()" class="bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-semibold">Enviar</button>
+                        <input type="text" id="user-input" onkeypress="if(event.key==='Enter') sendMessage()" placeholder="Escribe cualquier pregunta de Química o Bioquímica..." class="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-600">
+                        <button onclick="sendMessage()" id="send-btn" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs font-semibold">Enviar</button>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- ========================================================= -->
+        <!-- PESTAÑA 2: WEB 3.0 (PREGUNTAS INFINITAS E INSIGNIAS)      -->
+        <!-- ========================================================= -->
         <section id="tab-web3" class="hidden space-y-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                <h2 class="text-lg font-bold text-blue-900 mb-2">🕸️ Diagnóstico Semántico Adaptativo</h2>
-                <p class="font-semibold text-sm mb-3">¿Qué tipo de enlace une a los aminoácidos para formar proteínas?</p>
-                <div class="space-y-2 text-xs">
-                    <button onclick="checkSemantic('ionico')" class="w-full text-left p-3 rounded-xl border hover:border-blue-400">A) Enlace Iónico</button>
-                    <button onclick="checkSemantic('peptidico')" class="w-full text-left p-3 rounded-xl border hover:border-blue-400">B) Enlace Peptídico</button>
-                    <button onclick="checkSemantic('puente')" class="w-full text-left p-3 rounded-xl border hover:border-blue-400">C) Puente de Hidrógeno</button>
+            
+            <!-- Generador Infinito de Preguntas -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-blue-900">♾️ Entrenador Adaptativo Infinito (Web 3.0)</h2>
+                        <p class="text-xs text-slate-500">Cada reto genera datos aleatorios nuevos. Acumula aciertos para desbloquear las 6 insignias del curso.</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="bg-blue-100 text-blue-900 font-bold px-3 py-1 rounded-full">Aciertos: <span id="score-count">0</span></span>
+                        <span class="bg-emerald-100 text-emerald-900 font-bold px-3 py-1 rounded-full">Racha: <span id="streak-count">0</span> 🔥</span>
+                    </div>
                 </div>
-                <div id="semantic-feedback" class="mt-4 hidden p-3.5 rounded-xl text-xs"></div>
+
+                <div class="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <span id="q-category" class="text-[11px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded">Bloque I • Estructura Atómica</span>
+                        <button onclick="generateNextQuestion()" class="text-xs text-blue-700 hover:underline font-semibold">🔄 Cambiar pregunta</button>
+                    </div>
+                    <p id="q-text" class="font-semibold text-sm sm:text-base text-slate-900 mb-4">Cargando pregunta...</p>
+                    
+                    <div id="q-options" class="space-y-2 text-xs sm:text-sm"></div>
+                    
+                    <div id="semantic-feedback" class="mt-4 hidden p-3.5 rounded-xl text-xs sm:text-sm"></div>
+                    
+                    <div id="next-q-container" class="mt-4 hidden flex justify-end">
+                        <button onclick="generateNextQuestion()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-sm">
+                            Siguiente reto aleatorio ➔
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                <h2 class="text-lg font-bold text-blue-900 mb-3">🏅 Insignias Verificables (Web 3.0)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="border-2 border-emerald-200 bg-emerald-50 p-4 rounded-xl flex items-center gap-3">
-                        <span class="text-3xl">⚛️</span>
-                        <div><h3 class="font-bold text-sm">Bloque I: Estructura Atómica</h3><p class="text-xs text-emerald-800">Folio: UPAV-8F4A92</p></div>
+
+            <!-- Colección de 6 Insignias Desbloqueables -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-blue-900">🏅 Portafolio de Insignias Verificables UPAV</h2>
+                        <p class="text-xs text-slate-500">Se desbloquean automáticamente conforme respondes correctamente los retos de cada bloque temático.</p>
                     </div>
-                    <div id="badge-bio" class="border-2 border-slate-200 bg-slate-100 p-4 rounded-xl flex items-center gap-3 opacity-65">
-                        <span id="badge-icon" class="text-3xl">🔒</span>
-                        <div><h3 class="font-bold text-sm">Bloque II: Biomoléculas</h3><p id="badge-text" class="text-xs text-slate-500">Completa el diagnóstico superior</p></div>
-                    </div>
+                    <span id="badges-progress-text" class="text-xs font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border">0 / 6 Desbloqueadas</span>
                 </div>
+
+                <div id="badges-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
         </section>
 
+        <!-- ========================================================= -->
+        <!-- PESTAÑA 3: WEB 2.0 (COMUNIDAD COLABORATIVA UPAV)           -->
+        <!-- ========================================================= -->
         <section id="tab-web2" class="hidden space-y-6">
             <div class="bg-white p-5 rounded-2xl shadow-sm border">
-                <h2 class="text-lg font-bold text-blue-900 mb-3">💬 Comunidad Sabatina UPAV</h2>
+                <h2 class="text-lg font-bold text-blue-900 mb-1">💬 Comunidad Sabatina UPAV</h2>
+                <p class="text-xs text-slate-500 mb-4">Comparte apuntes, reglas mnemotécnicas o resuelve dudas con compañeros y asesores.</p>
                 <div class="flex gap-2 mb-4">
-                    <input type="text" id="post-input" placeholder="Comparte un tip o duda..." class="flex-1 border rounded-xl px-3 py-2 text-xs">
-                    <button onclick="addPost()" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">Publicar</button>
+                    <input type="text" id="post-input" placeholder="Comparte un tip de estudio o una duda..." class="flex-1 border rounded-xl px-3 py-2 text-xs sm:text-sm">
+                    <button onclick="addPost()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold">Publicar</button>
                 </div>
                 <div id="forum-list" class="space-y-3"></div>
             </div>
         </section>
+
     </main>
 
     <script>
+        // ==========================================
+        // 1. NAVEGACIÓN ENTRE PESTAÑAS
+        // ==========================================
         function switchTab(tab) {
             ['web4', 'web3', 'web2'].forEach(t => {
                 document.getElementById('tab-' + t).classList.add('hidden');
@@ -158,33 +240,37 @@
             });
             document.getElementById('tab-' + tab).classList.remove('hidden');
             document.getElementById('btn-' + tab).classList.add('tab-active');
+            document.getElementById('btn-' + tab).classList.remove('text-slate-500');
             if (tab === 'web4') onResize();
         }
 
+        // ==========================================
+        // 2. MODELADOR MOLECULAR 3D UNIVERSAL
+        // ==========================================
         const ELEMENTS = {
-            H:{mass:1.008,color:0xffffff,radius:0.32}, He:{mass:4.003,color:0xd9ffff,radius:0.35},
-            Li:{mass:6.94,color:0xcc80ff,radius:0.55}, Be:{mass:9.012,color:0xc2ff00,radius:0.50},
-            B:{mass:10.81,color:0xffb5b5,radius:0.48}, C:{mass:12.011,color:0x334155,radius:0.52},
-            N:{mass:14.007,color:0x2563eb,radius:0.50}, O:{mass:15.999,color:0xdc2626,radius:0.48},
-            F:{mass:18.998,color:0x22c55e,radius:0.44}, Na:{mass:22.990,color:0xab5cf2,radius:0.62},
-            Mg:{mass:24.305,color:0x8aff00,radius:0.58}, Al:{mass:26.982,color:0xbfa6a6,radius:0.56},
-            Si:{mass:28.085,color:0xf0c8a0,radius:0.55}, P:{mass:30.974,color:0xf97316,radius:0.54},
-            S:{mass:32.06,color:0xeab308,radius:0.54}, Cl:{mass:35.45,color:0x16a34a,radius:0.50},
-            K:{mass:39.098,color:0x8f40d4,radius:0.68}, Ca:{mass:40.078,color:0x3dff00,radius:0.64},
-            Fe:{mass:55.845,color:0xe06633,radius:0.60}, Cu:{mass:63.546,color:0xc88033,radius:0.58},
-            Zn:{mass:65.38,color:0x7d80b0,radius:0.58}, Br:{mass:79.904,color:0xa62929,radius:0.54},
-            I:{mass:126.90,color:0x940094,radius:0.58}
+            H:{mass:1.008,color:0xffffff,radius:0.32,name:'Hidrógeno'}, He:{mass:4.003,color:0xd9ffff,radius:0.35,name:'Helio'},
+            Li:{mass:6.94,color:0xcc80ff,radius:0.55,name:'Litio'}, Be:{mass:9.012,color:0xc2ff00,radius:0.50,name:'Berilio'},
+            B:{mass:10.81,color:0xffb5b5,radius:0.48,name:'Boro'}, C:{mass:12.011,color:0x334155,radius:0.52,name:'Carbono'},
+            N:{mass:14.007,color:0x2563eb,radius:0.50,name:'Nitrógeno'}, O:{mass:15.999,color:0xdc2626,radius:0.48,name:'Oxígeno'},
+            F:{mass:18.998,color:0x22c55e,radius:0.44,name:'Flúor'}, Na:{mass:22.990,color:0xab5cf2,radius:0.62,name:'Sodio'},
+            Mg:{mass:24.305,color:0x8aff00,radius:0.58,name:'Magnesio'}, Al:{mass:26.982,color:0xbfa6a6,radius:0.56,name:'Aluminio'},
+            Si:{mass:28.085,color:0xf0c8a0,radius:0.55,name:'Silicio'}, P:{mass:30.974,color:0xf97316,radius:0.54,name:'Fósforo'},
+            S:{mass:32.06,color:0xeab308,radius:0.54,name:'Azufre'}, Cl:{mass:35.45,color:0x16a34a,radius:0.50,name:'Cloro'},
+            K:{mass:39.098,color:0x8f40d4,radius:0.68,name:'Potasio'}, Ca:{mass:40.078,color:0x3dff00,radius:0.64,name:'Calcio'},
+            Fe:{mass:55.845,color:0xe06633,radius:0.60,name:'Hierro'}, Cu:{mass:63.546,color:0xc88033,radius:0.58,name:'Cobre'},
+            Zn:{mass:65.38,color:0x7d80b0,radius:0.58,name:'Zinc'}, Br:{mass:79.904,color:0xa62929,radius:0.54,name:'Bromo'},
+            I:{mass:126.90,color:0x940094,radius:0.58,name:'Yodo'}
         };
 
         function parseFormula(formula) {
             const clean = formula.replace(/\s+/g, '');
             if (!clean) throw new Error("Escribe una fórmula.");
-            const stack = [{}], regex = /([A-Z][a-z]?)|(\()|(\))|(\d+)/g;
+            const stack = [{}], regex = /([A-Z][a-z]?)|(\()\vert{}(\))|(\d+)/g;
             let match, lastToken = null, parsedLength = 0;
             while ((match = regex.exec(clean)) !== null) {
                 parsedLength += match[0].length;
                 if (match[1]) {
-                    if (!ELEMENTS[match[1]]) throw new Error(`Elemento no válido: ${match[1]}`);
+                    if (!ELEMENTS[match[1]]) throw new Error(`Elemento no reconocido: ${match[1]}`);
                     stack[stack.length - 1][match[1]] = (stack[stack.length - 1][match[1]] || 0) + 1;
                     lastToken = { type: 'el', symbol: match[1] };
                 } else if (match[2]) { stack.push({}); lastToken = { type: 'open' }; }
@@ -215,7 +301,7 @@
         const dLight = new THREE.DirectionalLight(0xffffff, 1.1); dLight.position.set(5, 8, 7); scene.add(dLight);
 
         let moleculeGroup = new THREE.Group(); scene.add(moleculeGroup);
-        let atomMeshes = [], autoRotate = true, showLabels = true;
+        let atomMeshes = [], autoRotate = true, showLabels = true, currentFormula = 'C6H12O6';
 
         function createBond(p1, p2) {
             const dir = new THREE.Vector3().subVectors(p2, p1);
@@ -232,7 +318,7 @@
             return pos;
         }
 
-        function buildMolecule3D(counts) {
+        function buildMolecule3D(counts, rawFormula) {
             while (moleculeGroup.children.length > 0) moleculeGroup.remove(moleculeGroup.children[0]);
             atomMeshes = []; labelsLayer.innerHTML = '';
             let total = 0, mass = 0, summary = [];
@@ -272,12 +358,14 @@
             document.getElementById('info-atoms').innerText = summary.join(' • ');
             document.getElementById('info-mass').innerText = mass.toFixed(2) + ' g/mol';
             document.getElementById('info-geom').innerText = geom;
+            currentFormula = rawFormula;
             camera.position.z = total > 12 ? 8.2 : 6.2;
         }
 
         function buildFromInput() {
+            const raw = document.getElementById('formula-input').value.trim();
             const err = document.getElementById('formula-error');
-            try { buildMolecule3D(parseFormula(document.getElementById('formula-input').value)); err.classList.add('hidden'); }
+            try { buildMolecule3D(parseFormula(raw), raw); err.classList.add('hidden'); }
             catch (e) { err.innerText = "⚠️ " + e.message; err.classList.remove('hidden'); }
         }
         function loadPreset(f) { document.getElementById('formula-input').value = f; buildFromInput(); }
@@ -300,55 +388,4 @@
                     atomMeshes.forEach(() => { const d = document.createElement('div'); d.className = 'atom-label'; labelsLayer.appendChild(d); });
                 }
                 atomMeshes.forEach((item, idx) => {
-                    const p = new THREE.Vector3(); item.mesh.getWorldPosition(p); p.project(camera);
-                    labelsLayer.children[idx].innerText = item.symbol;
-                    labelsLayer.children[idx].style.left = (p.x * container.clientWidth / 2 + container.clientWidth / 2) + 'px';
-                    labelsLayer.children[idx].style.top = (-(p.y * container.clientHeight / 2) + container.clientHeight / 2) + 'px';
-                });
-            }
-        }
-        function onResize() { if (container.clientWidth) { camera.aspect = container.clientWidth / container.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(container.clientWidth, container.clientHeight); } }
-        window.addEventListener('resize', onResize);
-        buildFromInput(); animate();
-
-        function checkBalance() {
-            const c1 = +document.getElementById('c1').value || 1, c2 = +document.getElementById('c2').value || 1, c3 = +document.getElementById('c3').value || 1, c4 = +document.getElementById('c4').value || 1;
-            const okC = c1 * 3 === c3, okH = c1 * 8 === c4 * 2, okO = c2 * 2 === c3 * 2 + c4;
-            document.getElementById('balance-table').innerHTML = `<div>C: ${c1*3} vs ${c3} ${okC?'✅':'❌'} | H: ${c1*8} vs ${c4*2} ${okH?'✅':'❌'} | O: ${c2*2} vs ${c3*2+c4} ${okO?'✅':'❌'}</div>`;
-            document.getElementById('balance-status').innerText = (okC && okH && okO) ? "🎉 ¡Balanceada correctamente!" : "⚠️ Ajusta los coeficientes hasta igualar ambos lados.";
-        }
-        checkBalance();
-
-        function sendMessage() {
-            const inp = document.getElementById('user-input'), chat = document.getElementById('chat-box');
-            if (!inp.value.trim()) return;
-            chat.innerHTML += `<div class="bg-slate-200 p-2 rounded-xl ml-auto max-w-[85%]"><strong>Tú:</strong> ${inp.value}</div>`;
-            setTimeout(() => { chat.innerHTML += `<div class="bg-blue-100 text-blue-950 p-2 rounded-xl max-w-[90%]"><strong>Tutor IA:</strong> Buena pregunta. Revisa los electrones de valencia de los elementos involucrados en la tabla periódica: ¿comparten o transfieren electrones?</div>`; chat.scrollTop = chat.scrollHeight; }, 350);
-            inp.value = '';
-        }
-
-        function checkSemantic(c) {
-            const fb = document.getElementById('semantic-feedback'); fb.classList.remove('hidden');
-            if (c === 'peptidico') {
-                fb.className = "mt-4 p-3 rounded-xl text-xs bg-emerald-100 text-emerald-950";
-                fb.innerHTML = "✅ ¡Correcto! Insignia desbloqueada.";
-                document.getElementById('badge-bio').classList.remove('opacity-65');
-                document.getElementById('badge-icon').innerText = "🧬";
-                document.getElementById('badge-text').innerText = "Folio: UPAV-3B9E41";
-            } else {
-                fb.className = "mt-4 p-3 rounded-xl text-xs bg-red-100 text-red-950";
-                fb.innerHTML = "⚠️ Ruta Semántica: Repasa primero los enlaces covalentes entre grupo amino y carboxilo.";
-            }
-        }
-
-        const posts = [{ author: "Profa. Elena (Asesora UPAV)", sede: "Xalapa", text: "Tip: escriban H2SO4 y Ca(OH)2 en el visor 3D para comparar ácidos y bases." }];
-        function renderPosts() {
-            const s = document.getElementById('sede-select').value;
-            document.getElementById('forum-list').innerHTML = posts.filter(p => s === 'Todas' || p.sede === s).map(p => `<div class="p-3 bg-slate-50 rounded-xl border text-xs"><strong>${p.author} (${p.sede}):</strong> <p class="mt-1">${p.text}</p></div>`).join('');
-        }
-        function filterPosts() { renderPosts(); }
-        function addPost() { const i = document.getElementById('post-input'); if (i.value.trim()) { posts.unshift({ author: "Tú", sede: "Xalapa", text: i.value }); i.value = ''; renderPosts(); } }
-        renderPosts();
-    </script>
-</body>
-</html>
+                    const p = new THREE.Vector3(); item.mesh.getWorldPosition(p); p.project
