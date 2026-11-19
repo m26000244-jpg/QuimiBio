@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="QuimiBio">
-    <title>QuimiBio • Bachillerato UPAV (Gemini 3.8 Fast)</title>
+    <title>QuimiBio • Bachillerato UPAV (IA Rápida)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -25,9 +25,9 @@
                 <div class="bg-white/15 p-2.5 rounded-xl border border-white/20 text-2xl">🧬</div>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
-                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV v3.8 Fast</span>
+                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV v3.9 Turbo</span>
                     </h1>
-                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • Gemini 3.8 + Web 2.0/3.0/4.0</p>
+                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • IA Multi-Modelo + Web 2.0/3.0/4.0</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -45,29 +45,5 @@
 
     <nav class="bg-white shadow-sm sticky top-0 z-20 border-b border-slate-200">
         <div class="max-w-5xl mx-auto grid grid-cols-3 text-xs sm:text-sm font-medium">
-            <button onclick="switchTab('web4')" id="btn-web4" class="tab-btn tab-active py-3.5 px-2">🤖 Web 4.0: Lab 3D & Gemini</button>
-            <button onclick="switchTab('web3')" id="btn-web3" class="tab-btn text-slate-500 py-3.5 px-2">🔗 Web 3.0: Retos & Insignias</button>
-            <button onclick="switchTab('web2')" id="btn-web2" class="tab-btn text-slate-500 py-3.5 px-2">👥 Web 2.0: Comunidad</button>
-        </div>
-    </nav>
-
-    <main class="max-w-5xl mx-auto p-4 mt-2 space-y-6">
-
-        <section id="tab-web4" class="space-y-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-                <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
-                    <div>
-                        <h2 class="text-lg font-bold text-blue-900">🔬 Modelador Molecular 3D Universal</h2>
-                        <p class="text-xs text-slate-500">Escribe cualquier fórmula química (ej. H2O, CH4, H2SO4, Ca(OH)2, C6H12O6) para construirla en 3D.</p>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <button onclick="toggleRotation()" id="btn-rotate" class="text-xs bg-slate-100 px-2.5 py-1.5 rounded-lg font-medium border">⏸ Pausar giro</button>
-                        <button onclick="toggleLabels()" id="btn-labels" class="text-xs bg-blue-50 text-blue-800 px-2.5 py-1.5 rounded-lg font-medium border border-blue-200">🏷️ Etiquetas: ON</button>
-                    </div>
-                </div>
-                <div class="flex gap-2 mb-3">
-                    <input type="text" id="formula-input" value="C6H12O6" placeholder="Ej: H2SO4 o Ca(OH)2" class="flex-1 border-2 border-blue-200 rounded-xl px-3.5 py-2 text-sm font-mono font-bold text-blue-950">
-                    <button onclick="buildFromInput()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-xl text-sm font-semibold">Modelar 3D</button>
-                </div>
-                <div class="flex flex-wrap gap-1.5 mb-3 text-xs">
-                    <button onclick="loadPreset('H2O')" class="bg-slate-100 hover:bg-emerald-100 px
+            <button onclick="switchTab('web4')" id="btn-web4" class="tab-btn tab-active py-3.5 px-2">🤖 Web 4.0: Lab 3D & IA</button>
+            <button onclick="switchTab('web3')" id="btn-web3" class="tab-btn text-slate-500 py-3.5 px-2">🔗 Web 3.0: Retos & Insignias
