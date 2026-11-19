@@ -265,7 +265,7 @@
         function parseFormula(formula) {
             const clean = formula.replace(/\s+/g, '');
             if (!clean) throw new Error("Escribe una fórmula.");
-            const stack = [{}], regex = /([A-Z][a-z]?)|(\()\vert{}(\))|(\d+)/g;
+            const stack = [{}], regex = /([A-Z][a-z]?)|(\()|(\))|(\d+)/g;
             let match, lastToken = null, parsedLength = 0;
             while ((match = regex.exec(clean)) !== null) {
                 parsedLength += match[0].length;
@@ -388,4 +388,382 @@
                     atomMeshes.forEach(() => { const d = document.createElement('div'); d.className = 'atom-label'; labelsLayer.appendChild(d); });
                 }
                 atomMeshes.forEach((item, idx) => {
-                    const p = new THREE.Vector3(); item.mesh.getWorldPosition(p); p.project
+                    const p = new THREE.Vector3(); item.mesh.getWorldPosition(p); p.project(camera);
+                    labelsLayer.children[idx].innerText = item.symbol;
+                    labelsLayer.children[idx].style.left = (p.x * container.clientWidth / 2 + container.clientWidth / 2) + 'px';
+                    labelsLayer.children[idx].style.top = (-(p.y * container.clientHeight / 2) + container.clientHeight / 2) + 'px';
+                });
+            }
+        }
+        function onResize() { if (container.clientWidth) { camera.aspect = container.clientWidth / container.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(container.clientWidth, container.clientHeight); } }
+        window.addEventListener('resize', onResize);
+        buildFromInput(); animate();
+
+        // ==========================================
+        // 3. ESTEQUIOMETRÍA
+        // ==========================================
+        function checkBalance() {
+            const c1 = +document.getElementById('c1').value || 1, c2 = +document.getElementById('c2').value || 1, c3 = +document.getElementById('c3').value || 1, c4 = +document.getElementById('c4').value || 1;
+            const okC = c1 * 3 === c3, okH = c1 * 8 === c4 * 2, okO = c2 * 2 === c3 * 2 + c4;
+            document.getElementById('balance-table').innerHTML = `<div>C: ${c1*3} vs ${c3} ${okC?'✅':'❌'} | H: ${c1*8} vs ${c4*2} ${okH?'✅':'❌'} | O: ${c2*2} vs ${c3*2+c4} ${okO?'✅':'❌'}</div>`;
+            document.getElementById('balance-status').innerText = (okC && okH && okO) ? "🎉 ¡Balanceada correctamente!" : "⚠️ Ajusta los coeficientes hasta igualar ambos lados.";
+        }
+        checkBalance();
+
+        // ==========================================
+        // 4. CONEXIÓN REAL CON GEMINI API (PROFESOR IA)
+        // ==========================================
+        let chatHistory = [];
+
+        function updateGeminiStatus() {
+            const key = localStorage.getItem('quimibio_gemini_key');
+            const badge = document.getElementById('gemini-status-badge');
+            if (key && key.startsWith('AIza')) {
+                badge.className = "text-[11px] text-emerald-700 font-bold";
+                badge.innerText = "🟢 Conectado a Google Gemini (IA Real Activa)";
+            } else {
+                badge.className = "text-[11px] text-amber-700 font-medium";
+                badge.innerText = "🟡 Modo Local • Haz clic en 'API Key' para activar Gemini real";
+            }
+        }
+        updateGeminiStatus();
+
+        function toggleApiPanel() {
+            const panel = document.getElementById('api-key-panel');
+            panel.classList.toggle('hidden');
+            document.getElementById('gemini-api-input').value = localStorage.getItem('quimibio_gemini_key') || '';
+        }
+
+        function saveApiKey() {
+            const val = document.getElementById('gemini-api-input').value.trim();
+            if (val) {
+                localStorage.setItem('quimibio_gemini_key', val);
+                updateGeminiStatus();
+                document.getElementById('api-key-panel').classList.add('hidden');
+                appendChat("Profesor IA", "¡Excelente! Ya estoy conectado a los servidores de Gemini. Ahora puedes preguntarme cualquier ejercicio, fórmula o duda de Química y Bioquímica.");
+            }
+        }
+
+        function clearApiKey() {
+            localStorage.removeItem('quimibio_gemini_key');
+            document.getElementById('gemini-api-input').value = '';
+            updateGeminiStatus();
+        }
+
+        function appendChat(sender, htmlText, isUser = false) {
+            const chat = document.getElementById('chat-box');
+            const div = document.createElement('div');
+            div.className = isUser 
+                ? "bg-slate-200 text-slate-900 p-2.5 rounded-xl rounded-tr-none ml-auto max-w-[85%]" 
+                : "bg-blue-100 text-blue-950 p-2.5 rounded-xl rounded-tl-none max-w-[92%] leading-relaxed";
+            div.innerHTML = `<strong>${sender}:</strong> ${htmlText}`;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+            return div;
+        }
+
+        function askTutorAboutMolecule() {
+            document.getElementById('user-input').value = `Explícame la estructura, tipo de enlaces y usos de la molécula ${currentFormula} que acabo de modelar en 3D.`;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const inp = document.getElementById('user-input');
+            const btn = document.getElementById('send-btn');
+            const text = inp.value.trim();
+            if (!text) return;
+
+            appendChat("Tú", text, true);
+            inp.value = '';
+            btn.disabled = true;
+            btn.innerText = "...";
+
+            const apiKey = localStorage.getItem('quimibio_gemini_key');
+
+            if (apiKey && apiKey.startsWith('AIza')) {
+                const loadingBubble = appendChat("Profesor IA", "Analizando tu pregunta...");
+                try {
+                    const systemPrompt = "Eres un profesor solidario y experto de Química y Bioquímica para bachillerato de la UPAV (Universidad Popular Autónoma de Veracruz). Responde en español de forma clara, empática y pedagógica. Explica los conceptos paso a paso y, cuando se trate de un ejercicio o problema, guía al alumno para que razone la respuesta. Usa formato limpio sin exceso de tecnicismos innecesarios.";
+                    
+                    chatHistory.push({ role: "user", parts: [{ text: text }] });
+
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            systemInstruction: { parts: [{ text: systemPrompt }] },
+                            contents: chatHistory.slice(-8)
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.error.message);
+
+                    const replyText = data.candidates[0].content.parts[0].text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\n/g, '<br>');
+
+                    chatHistory.push({ role: "model", parts: [{ text: data.candidates[0].content.parts[0].text }] });
+                    loadingBubble.innerHTML = `<strong>Profesor IA (Gemini):</strong> ${replyText}`;
+                } catch (err) {
+                    loadingBubble.innerHTML = `<strong>⚠️ Error de conexión con Gemini:</strong> ${err.message}. Verifica que tu API Key sea válida.`;
+                }
+            } else {
+                // Respuesta de respaldo si aún no configuran la API Key
+                setTimeout(() => {
+                    appendChat("Profesor IA (Local)", `Para resolver tu duda sobre <em>"${text}"</em> con inteligencia artificial completa, haz clic arriba en el botón <strong>🔑 API Key</strong> y pega tu clave gratuita de Google AI Studio. Mientras tanto, recuerda revisar los electrones de valencia y la ley de conservación de la materia en tu cuadernillo.`);
+                }, 400);
+            }
+
+            btn.disabled = false;
+            btn.innerText = "Enviar";
+        }
+
+        // ==========================================
+        // 5. WEB 3.0: PREGUNTAS ALEATORIAS INFINITAS + 6 INSIGNIAS
+        // ==========================================
+        let xp = 0, score = 0, streak = 0;
+        let currentQuestion = null;
+
+        const BADGES = [
+            { id: 'atomo', icon: '⚛️', title: 'Bloque I: Estructura Atómica', desc: 'Protones, neutrones y tabla periódica', unlocked: false, folio: '' },
+            { id: 'enlaces', icon: '🔗', title: 'Bloque II: Enlaces Químicos', desc: 'Enlace iónico, covalente y metálico', unlocked: false, folio: '' },
+            { id: 'nomenclatura', icon: '🧪', title: 'Bloque III: Nomenclatura y Valencias', desc: 'Óxidos, hidróxidos, ácidos y sales', unlocked: false, folio: '' },
+            { id: 'estequio', icon: '⚖️', title: 'Bloque IV: Estequiometría y Mol', desc: 'Cálculo de masa molar y balanceo', unlocked: false, folio: '' },
+            { id: 'ph', icon: '🌡️', title: 'Bloque V: Ácidos, Bases y pH', desc: 'Escala de pH y neutralización', unlocked: false, folio: '' },
+            { id: 'bio', icon: '🧬', title: 'Bloque VI: Biomoléculas', desc: 'Carbohidratos, lípidos y proteínas', unlocked: false, folio: '' }
+        ];
+
+        function renderBadges() {
+            const grid = document.getElementById('badges-grid');
+            const unlockedCount = BADGES.filter(b => b.unlocked).length;
+            document.getElementById('badges-progress-text').innerText = `${unlockedCount} / ${BADGES.length} Desbloqueadas`;
+
+            grid.innerHTML = BADGES.map(b => `
+                <div class="border-2 ${b.unlocked ? 'border-emerald-300 bg-emerald-50/80' : 'border-slate-200 bg-slate-100 opacity-65'} p-4 rounded-xl flex items-start gap-3 transition-all">
+                    <div class="text-2xl bg-white p-2 rounded-xl shadow-sm">${b.unlocked ? b.icon : '🔒'}</div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-xs sm:text-sm">${b.title}</h3>
+                        <p class="text-[11px] text-slate-600 mt-0.5">${b.desc}</p>
+                        ${b.unlocked 
+                            ? `<span class="inline-block mt-1.5 text-[10px] font-mono bg-white text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">✅ Folio: ${b.folio}</span>`
+                            : `<span class="inline-block mt-1.5 text-[10px] text-slate-400">Bloqueada • Responde retos de este bloque</span>`}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generador Infinito (combina cálculos dinámicos aleatorios + banco conceptual amplio)
+        function createDynamicQuestion() {
+            const generators = [
+                // 1. Cálculo dinámico de Neutrones (Infinito)
+                () => {
+                    const elems = [
+                        { n: 'Carbono', z: 6 }, { n: 'Oxígeno', z: 8 }, { n: 'Sodio', z: 11 },
+                        { n: 'Magnesio', z: 12 }, { n: 'Aluminio', z: 13 }, { n: 'Cloro', z: 17 },
+                        { n: 'Potasio', z: 19 }, { n: 'Calcio', z: 20 }, { n: 'Hierro', z: 26 }
+                    ];
+                    const el = elems[Math.floor(Math.random() * elems.length)];
+                    const neutrons = el.z + Math.floor(Math.random() * 5);
+                    const massA = el.z + neutrons;
+                    return {
+                        badgeId: 'atomo',
+                        category: 'Bloque I • Estructura Atómica (Cálculo Dinámico)',
+                        text: `Un isótopo de ${el.n} tiene número atómico Z = ${el.z} y número de masa A = ${massA}. ¿Cuántos neutrones tiene en su núcleo?`,
+                        options: [
+                            { text: `${neutrons} neutrones`, correct: true },
+                            { text: `${massA + el.z} neutrones`, correct: false },
+                            { text: `${el.z} neutrones`, correct: false }
+                        ],
+                        hint: `Recuerda la fórmula: Neutrones = Número de masa (A) − Número atómico (Z). Es decir: ${massA} − ${el.z}.`
+                    };
+                },
+                // 2. Cálculo dinámico de Masa Molar (Infinito)
+                () => {
+                    const nH2O = Math.floor(Math.random() * 6) + 2;
+                    const ans = (nH2O * 18).toFixed(0);
+                    return {
+                        badgeId: 'estequio',
+                        category: 'Bloque IV • Estequiometría y Mol (Cálculo Dinámico)',
+                        text: `Sabiendo que la masa molar del agua (H₂O) es 18 g/mol, ¿cuántos gramos pesan exactamente ${nH2O} moles de agua?`,
+                        options: [
+                            { text: `${ans} gramos`, correct: true },
+                            { text: `${(18 / nH2O).toFixed(1)} gramos`, correct: false },
+                            { text: `${nH2O + 18} gramos`, correct: false }
+                        ],
+                        hint: `Multiplica el número de moles (${nH2O}) por la masa molar del compuesto (18 g/mol).`
+                    };
+                },
+                // 3. Escala de pH dinámica (Infinito)
+                () => {
+                    const ph = (Math.random() * 13 + 0.5).toFixed(1);
+                    const type = ph < 6.8 ? 'Ácida' : (ph > 7.2 ? 'Básica o Alcalina' : 'Neutra');
+                    return {
+                        badgeId: 'ph',
+                        category: 'Bloque V • Ácidos, Bases y pH (Caso Aleatorio)',
+                        text: `En una práctica de laboratorio se mide una muestra biológica con un pH de ${ph}. ¿Cómo se clasifica esta sustancia?`,
+                        options: [
+                            { text: `Sustancia ${type}`, correct: true },
+                            { text: `Sustancia ${type === 'Ácida' ? 'Básica o Alcalina' : 'Ácida'}`, correct: false },
+                            { text: `Sustancia completamente Neutra (pH 7.0)`, correct: false }
+                        ],
+                        hint: `En la escala de pH (0 a 14): menor a 7 es ácido, 7 es neutro y mayor a 7 es básico/alcalino.`
+                    };
+                },
+                // 4. Enlaces Químicos
+                () => {
+                    const cases = [
+                        { comp: 'NaCl (Cloruro de sodio)', ans: 'Enlace Iónico', wrong1: 'Enlace Covalente No Polar', wrong2: 'Enlace Metálico', hint: 'El Sodio (metal) cede 1 electrón al Cloro (no metal).' },
+                        { comp: 'CH₄ (Metano)', ans: 'Enlace Covalente', wrong1: 'Enlace Iónico', wrong2: 'Enlace Metálico', hint: 'Carbono e Hidrógeno son no metales que comparten pares de electrones.' },
+                        { comp: 'O₂ (Oxígeno molecular)', ans: 'Enlace Covalente No Polar', wrong1: 'Enlace Iónico', wrong2: 'Puente Salino', hint: 'Dos átomos idénticos comparten electrones con la misma electronegatividad.' }
+                    ];
+                    const c = cases[Math.floor(Math.random() * cases.length)];
+                    return {
+                        badgeId: 'enlaces',
+                        category: 'Bloque II • Enlaces Químicos',
+                        text: `¿Qué tipo de enlace químico mantiene unidos a los átomos en el compuesto ${c.comp}?`,
+                        options: [
+                            { text: c.ans, correct: true },
+                            { text: c.wrong1, correct: false },
+                            { text: c.wrong2, correct: false }
+                        ],
+                        hint: c.hint
+                    };
+                },
+                // 5. Nomenclatura y Valencias
+                () => {
+                    const cases = [
+                        { f: 'H₂SO₄', name: 'Ácido sulfúrico (Oxiácido)', w1: 'Hidróxido de azufre', w2: 'Sal binaria', hint: 'Inicia con Hidrógeno (H) seguido de un no metal y Oxígeno.' },
+                        { f: 'Ca(OH)₂', name: 'Hidróxido de calcio (Base)', w1: 'Ácido carbónico', w2: 'Óxido ácido', hint: 'Contiene el grupo funcional hidroxilo (OH)⁻ unido a un metal.' },
+                        { f: 'CO₂', name: 'Dióxido de carbono (Óxido no metálico)', w1: 'Hidruro de carbono', w2: 'Hidróxido de carbono', hint: 'Es la combinación de un no metal (Carbono) con Oxígeno.' }
+                    ];
+                    const c = cases[Math.floor(Math.random() * cases.length)];
+                    return {
+                        badgeId: 'nomenclatura',
+                        category: 'Bloque III • Nomenclatura Inorgánica',
+                        text: `¿A qué función química y nombre corresponde la fórmula ${c.f}?`,
+                        options: [
+                            { text: c.name, correct: true },
+                            { text: c.w1, correct: false },
+                            { text: c.w2, correct: false }
+                        ],
+                        hint: c.hint
+                    };
+                },
+                // 6. Biomoléculas
+                () => {
+                    const cases = [
+                        { q: '¿Qué enlace une a los aminoácidos para formar proteínas?', a: 'Enlace Peptídico', w1: 'Enlace Glucosídico', w2: 'Enlace Éster', hint: 'Une el grupo amino (-NH₂) de un aminoácido con el carboxilo (-COOH) de otro.' },
+                        { q: '¿Cuál es la principal fuente de energía inmediata para las células (C₆H₁₂O₆)?', a: 'Carbohidratos (Glucosa)', w1: 'Ácidos Nucleicos (ADN)', w2: 'Sales Minerales', hint: 'Los monosacáridos como la glucosa son el combustible celular primario.' },
+                        { q: '¿Qué biomolécula almacena la información genética hereditaria?', a: 'Ácidos Nucleicos (ADN y ARN)', w1: 'Triglicéridos', w2: 'Celulosa', hint: 'Están formados por nucleótidos con bases nitrogenadas (A, T, C, G).' }
+                    ];
+                    const c = cases[Math.floor(Math.random() * cases.length)];
+                    return {
+                        badgeId: 'bio',
+                        category: 'Bloque VI • Bioquímica y Biomoléculas',
+                        text: c.q,
+                        options: [
+                            { text: c.a, correct: true },
+                            { text: c.w1, correct: false },
+                            { text: c.w2, correct: false }
+                        ],
+                        hint: c.hint
+                    };
+                }
+            ];
+
+            const selectedGen = generators[Math.floor(Math.random() * generators.length)];
+            const qObj = selectedGen();
+            // Mezclar opciones aleatoriamente
+            qObj.options.sort(() => Math.random() - 0.5);
+            return qObj;
+        }
+
+        function generateNextQuestion() {
+            currentQuestion = createDynamicQuestion();
+            document.getElementById('q-category').innerText = currentQuestion.category;
+            document.getElementById('q-text').innerText = currentQuestion.text;
+            document.getElementById('semantic-feedback').classList.add('hidden');
+            document.getElementById('next-q-container').classList.add('hidden');
+
+            const optDiv = document.getElementById('q-options');
+            const letters = ['A', 'B', 'C'];
+            optDiv.innerHTML = currentQuestion.options.map((opt, idx) => `
+                <button onclick="answerQuestion(${idx})" id="opt-btn-${idx}" class="w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 transition font-medium">
+                    <span class="font-bold text-blue-800 mr-2">${letters[idx]})</span> ${opt.text}
+                </button>
+            `).join('');
+        }
+
+        function answerQuestion(idx) {
+            const chosen = currentQuestion.options[idx];
+            const fb = document.getElementById('semantic-feedback');
+            fb.classList.remove('hidden', 'bg-red-100', 'text-red-950', 'bg-emerald-100', 'text-emerald-950');
+
+            // Deshabilitar botones tras responder
+            currentQuestion.options.forEach((_, i) => {
+                document.getElementById(`opt-btn-${i}`).disabled = true;
+            });
+
+            if (chosen.correct) {
+                score++;
+                streak++;
+                xp += 50;
+                document.getElementById('score-count').innerText = score;
+                document.getElementById('streak-count').innerText = streak;
+                document.getElementById('header-xp').innerText = `⭐ ${xp} XP`;
+
+                // Desbloquear insignia correspondiente si aún estaba bloqueada
+                const badge = BADGES.find(b => b.id === currentQuestion.badgeId);
+                let badgeMsg = "";
+                if (badge && !badge.unlocked) {
+                    badge.unlocked = true;
+                    badge.folio = 'UPAV-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                    renderBadges();
+                    badgeMsg = `<br>🏅 <strong>¡Nueva Insignia Desbloqueada!</strong> Has obtenido <em>${badge.title}</em> (Folio: ${badge.folio}).`;
+                }
+
+                fb.classList.add('bg-emerald-100', 'text-emerald-950', 'border', 'border-emerald-300');
+                fb.innerHTML = `✅ <strong>¡Excelente! (+50 XP)</strong> Respuesta correcta.${badgeMsg}`;
+            } else {
+                streak = 0;
+                document.getElementById('streak-count').innerText = streak;
+                fb.classList.add('bg-red-100', 'text-red-950', 'border', 'border-red-300');
+                fb.innerHTML = `⚠️ <strong>Ruta Semántica Activada:</strong> ${currentQuestion.hint}`;
+            }
+
+            document.getElementById('next-q-container').classList.remove('hidden');
+        }
+
+        renderBadges();
+        generateNextQuestion();
+
+        // ==========================================
+        // 6. WEB 2.0: COMUNIDAD SABATINA
+        // ==========================================
+        const posts = [
+            { author: "Profa. Elena Martínez (Asesora UPAV)", sede: "Xalapa", text: "Tip para el sábado: usen el Entrenador Infinito de la pestaña Web 3.0 para desbloquear sus 6 insignias y muéstrenme sus folios en la asesoría." },
+            { author: "Ana Sofía Ruiz (Estudiante)", sede: "Veracruz", text: "Regla mnemotécnica para los bioelementos primarios: CHONPS (Carbono, Hidrógeno, Oxígeno, Nitrógeno, Fósforo y Azufre)." }
+        ];
+        function renderPosts() {
+            const s = document.getElementById('sede-select').value;
+            document.getElementById('forum-list').innerHTML = posts.filter(p => s === 'Todas' || p.sede === s).map(p => `
+                <div class="p-3.5 bg-slate-50 rounded-xl border text-xs sm:text-sm">
+                    <strong class="text-blue-900">${p.author} • <span class="text-emerald-700">Sede ${p.sede}</span></strong>
+                    <p class="mt-1 text-slate-700">${p.text}</p>
+                </div>
+            `).join('');
+        }
+        function filterPosts() { renderPosts(); }
+        function addPost() {
+            const i = document.getElementById('post-input');
+            if (i.value.trim()) {
+                posts.unshift({ author: "Tú (Comunidad UPAV)", sede: document.getElementById('sede-select').value === 'Todas' ? 'Xalapa' : document.getElementById('sede-select').value, text: i.value });
+                i.value = '';
+                renderPosts();
+            }
+        }
+        renderPosts();
+    </script>
+</body>
+</html>
