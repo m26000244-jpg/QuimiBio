@@ -25,9 +25,9 @@
                 <div class="bg-white/15 p-2.5 rounded-xl border border-white/20 text-2xl">🧬</div>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
-                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV v4.0 Live</span>
+                        QuimiBio <span class="text-xs font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">UPAV v4.1 Live</span>
                     </h1>
-                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • Gemini Streaming + Búsqueda Google</p>
+                    <p class="text-xs text-blue-100">Plataforma Híbrida de Química y Bioquímica • Gemini Streaming + Web 2.0/3.0/4.0</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -99,25 +99,42 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- LABORATORIO DE ESTEQUIOMETRÍA INTERACTIVO -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col justify-between">
                     <div>
-                        <h2 class="text-lg font-bold text-blue-900 mb-1">⚖️ Laboratorio de Estequiometría</h2>
-                        <p class="text-xs text-slate-500 mb-3">Ajusta los coeficientes para balancear la combustión del propano:</p>
-                        <div class="bg-slate-50 p-4 rounded-xl border text-center my-2 flex flex-wrap items-center justify-center gap-2 font-mono font-bold">
-                            <input type="number" id="c1" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>C₃H₈ +</span>
-                            <input type="number" id="c2" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>O₂ ➔</span>
-                            <input type="number" id="c3" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>CO₂ +</span>
-                            <input type="number" id="c4" value="1" min="1" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 rounded-lg py-1"><span>H₂O</span>
+                        <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+                            <div>
+                                <h2 class="text-lg font-bold text-blue-900">⚖️ Laboratorio de Estequiometría</h2>
+                                <p id="rxn-title" class="text-xs text-slate-500">Combustión del propano • Ajusta los coeficientes:</p>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span id="rxn-counter-badge" class="text-[11px] font-bold bg-blue-50 text-blue-800 border border-blue-200 px-2 py-1 rounded-lg">Balanceadas: 0</span>
+                                <button onclick="nextReaction()" class="text-xs bg-blue-700 hover:bg-blue-800 text-white px-2.5 py-1.5 rounded-lg font-semibold shadow-sm transition">
+                                    🔄 Nueva reacción
+                                </button>
+                            </div>
                         </div>
-                        <div id="balance-table" class="mt-3 text-xs space-y-1.5"></div>
+
+                        <div id="reaction-equation-box" class="bg-slate-50 p-4 rounded-xl border text-center my-2 flex flex-wrap items-center justify-center gap-2 font-mono font-bold text-sm">
+                            <!-- Se genera dinámicamente -->
+                        </div>
+
+                        <div id="balance-table" class="mt-3 text-xs bg-slate-50/70 p-2.5 rounded-xl border border-slate-200"></div>
                     </div>
-                    <div id="balance-status" class="mt-3 p-3 rounded-xl text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200"></div>
+
+                    <div class="mt-3 space-y-2">
+                        <div id="balance-status" class="p-3 rounded-xl text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200"></div>
+                        <button id="btn-next-rxn-solved" onclick="nextReaction()" class="hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-xl text-xs font-bold shadow-sm transition">
+                            ✨ ¡Reacción balanceada! Siguiente ecuación aleatoria ➔
+                        </button>
+                    </div>
                 </div>
 
+                <!-- PROFESOR IA (GEMINI LIVE STREAMING) -->
                 <div class="bg-white p-5 rounded-2xl shadow-sm border flex flex-col">
                     <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
                         <div>
-                            <h2 class="text-lg font-bold text-blue-900 flex items-center gap-1.5">🧠 Profesor IA (Gemini Live + Google)</h2>
+                            <h2 class="text-lg font-bold text-blue-900 flex items-center gap-1.5">🧠 Profesor IA (Gemini Live)</h2>
                             <p id="gemini-status-badge" class="text-[11px] text-amber-700 font-medium">Modo Local • Conecta tu API Key para respuestas en vivo</p>
                         </div>
                         <button onclick="toggleApiPanel()" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 px-2.5 py-1.5 rounded-lg font-semibold">
@@ -126,21 +143,17 @@
                     </div>
 
                     <div id="api-key-panel" class="hidden mb-3 p-3 bg-slate-100 rounded-xl border border-slate-300 text-xs space-y-2">
-                        <p class="text-slate-700">Pega tu clave de <strong>Google AI Studio</strong> (<code>AQ...</code> o <code>AIza...</code>). Se guarda solo en tu navegador:</p>
+                        <p class="text-slate-700">Pega tu clave de <strong>Google AI Studio</strong> (<code>AIza...</code>). Se guarda solo en tu navegador:</p>
                         <div class="flex gap-2">
                             <input type="password" id="gemini-api-input" placeholder="Pega tu clave aquí..." class="flex-1 border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white font-mono">
                             <button onclick="saveApiKey()" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-semibold">Guardar</button>
                             <button onclick="clearApiKey()" class="bg-slate-300 text-slate-700 px-2.5 py-1.5 rounded-lg">Borrar</button>
                         </div>
-                        <label class="flex items-center gap-2 text-slate-700 pt-1 cursor-pointer">
-                            <input type="checkbox" id="use-google-search" checked class="rounded border-slate-400">
-                            <span>Buscar en Google para datos o noticias actualizadas</span>
-                        </label>
                     </div>
 
                     <div id="chat-box" class="h-52 overflow-y-auto bg-slate-50 p-3 rounded-xl border space-y-2.5 text-xs mb-3">
                         <div class="bg-blue-100 text-blue-950 p-3 rounded-xl rounded-tl-none max-w-[90%]">
-                            <strong>Profesor IA:</strong> ¡Hola! Soy tu asesor virtual de Química y Bioquímica de la UPAV. Pregúntame cualquier tema, fórmula o dato reciente y consultaré en Google cuando haga falta.
+                            <strong>Profesor IA:</strong> ¡Hola! Soy tu asesor virtual de Química y Bioquímica de la UPAV (Conexión directa en tiempo real). Pregúntame cualquier tema, ejercicio o fórmula química.
                         </div>
                     </div>
 
@@ -208,6 +221,13 @@
     </main>
 
     <script>
+        let xp = 0, score = 0, streak = 0, currentQuestion = null;
+
+        function addXP(points) {
+            xp += points;
+            document.getElementById('header-xp').innerText = `⭐ ${xp} XP`;
+        }
+
         function switchTab(tab) {
             ['web4', 'web3', 'web2'].forEach(t => {
                 document.getElementById('tab-' + t).classList.add('hidden');
@@ -372,38 +392,174 @@
         window.addEventListener('resize', onResize);
         buildFromInput(); animate();
 
-        function checkBalance() {
-            const c1 = +document.getElementById('c1').value || 1, c2 = +document.getElementById('c2').value || 1, c3 = +document.getElementById('c3').value || 1, c4 = +document.getElementById('c4').value || 1;
-            const okC = c1 * 3 === c3, okH = c1 * 8 === c4 * 2, okO = c2 * 2 === c3 * 2 + c4;
-            document.getElementById('balance-table').innerHTML = `<div>C: ${c1*3} vs ${c3} ${okC?'✅':'❌'} | H: ${c1*8} vs ${c4*2} ${okH?'✅':'❌'} | O: ${c2*2} vs ${c3*2+c4} ${okO?'✅':'❌'}</div>`;
-            document.getElementById('balance-status').innerText = (okC && okH && okO) ? "🎉 ¡Balanceada correctamente!" : "⚠️ Ajusta los coeficientes hasta igualar ambos lados.";
+        // ==========================================
+        // LABORATORIO DE ESTEQUIOMETRÍA DINÁMICO
+        // ==========================================
+        const REACTIONS = [
+            {
+                title: "Combustión del propano",
+                reactants: [{ label: "C₃H₈", atoms: { C: 3, H: 8 } }, { label: "O₂", atoms: { O: 2 } }],
+                products: [{ label: "CO₂", atoms: { C: 1, O: 2 } }, { label: "H₂O", atoms: { H: 2, O: 1 } }],
+                elements: ["C", "H", "O"]
+            },
+            {
+                title: "Combustión del metano (gas natural)",
+                reactants: [{ label: "CH₄", atoms: { C: 1, H: 4 } }, { label: "O₂", atoms: { O: 2 } }],
+                products: [{ label: "CO₂", atoms: { C: 1, O: 2 } }, { label: "H₂O", atoms: { H: 2, O: 1 } }],
+                elements: ["C", "H", "O"]
+            },
+            {
+                title: "Síntesis de amoníaco (Proceso Haber)",
+                reactants: [{ label: "N₂", atoms: { N: 2 } }, { label: "H₂", atoms: { H: 2 } }],
+                products: [{ label: "NH₃", atoms: { N: 1, H: 3 } }],
+                elements: ["N", "H"]
+            },
+            {
+                title: "Oxidación del hierro (corrosión)",
+                reactants: [{ label: "Fe", atoms: { Fe: 1 } }, { label: "O₂", atoms: { O: 2 } }],
+                products: [{ label: "Fe₂O₃", atoms: { Fe: 2, O: 3 } }],
+                elements: ["Fe", "O"]
+            },
+            {
+                title: "Neutralización ácido-base",
+                reactants: [{ label: "H₂SO₄", atoms: { H: 2, S: 1, O: 4 } }, { label: "NaOH", atoms: { Na: 1, O: 1, H: 1 } }],
+                products: [{ label: "Na₂SO₄", atoms: { Na: 2, S: 1, O: 4 } }, { label: "H₂O", atoms: { H: 2, O: 1 } }],
+                elements: ["Na", "H", "S", "O"]
+            },
+            {
+                title: "Descomposición térmica del clorato de potasio",
+                reactants: [{ label: "KClO₃", atoms: { K: 1, Cl: 1, O: 3 } }],
+                products: [{ label: "KCl", atoms: { K: 1, Cl: 1 } }, { label: "O₂", atoms: { O: 2 } }],
+                elements: ["K", "Cl", "O"]
+            },
+            {
+                title: "Fotosíntesis celular",
+                reactants: [{ label: "CO₂", atoms: { C: 1, O: 2 } }, { label: "H₂O", atoms: { H: 2, O: 1 } }],
+                products: [{ label: "C₆H₁₂O₆", atoms: { C: 6, H: 12, O: 6 } }, { label: "O₂", atoms: { O: 2 } }],
+                elements: ["C", "H", "O"]
+            },
+            {
+                title: "Combustión del etanol",
+                reactants: [{ label: "C₂H₅OH", atoms: { C: 2, H: 6, O: 1 } }, { label: "O₂", atoms: { O: 2 } }],
+                products: [{ label: "CO₂", atoms: { C: 1, O: 2 } }, { label: "H₂O", atoms: { H: 2, O: 1 } }],
+                elements: ["C", "H", "O"]
+            }
+        ];
+
+        let currentRxnIdx = 0;
+        let rxnSolvedCurrent = false;
+        let rxnTotalSolved = 0;
+
+        function renderReaction() {
+            const rxn = REACTIONS[currentRxnIdx];
+            rxnSolvedCurrent = false;
+            document.getElementById('rxn-title').innerText = `${rxn.title} • Ajusta los coeficientes estequiométricos:`;
+            document.getElementById('btn-next-rxn-solved').classList.add('hidden');
+
+            let html = '';
+            rxn.reactants.forEach((r, idx) => {
+                if (idx > 0) html += `<span class="text-slate-400">+</span>`;
+                html += `<div class="inline-flex items-center gap-1">
+                    <input type="number" id="rxn-r-${idx}" value="1" min="1" max="25" oninput="checkBalance()" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 focus:border-blue-600 focus:outline-none rounded-lg py-1 bg-white text-blue-950">
+                    <span>${r.label}</span>
+                </div>`;
+            });
+
+            html += `<span class="text-emerald-700 px-1 text-base">➔</span>`;
+
+            rxn.products.forEach((p, idx) => {
+                if (idx > 0) html += `<span class="text-slate-400">+</span>`;
+                html += `<div class="inline-flex items-center gap-1">
+                    <input type="number" id="rxn-p-${idx}" value="1" min="1" max="25" oninput="checkBalance()" onchange="checkBalance()" class="w-12 text-center border-2 border-blue-300 focus:border-blue-600 focus:outline-none rounded-lg py-1 bg-white text-blue-950">
+                    <span>${p.label}</span>
+                </div>`;
+            });
+
+            document.getElementById('reaction-equation-box').innerHTML = html;
+            checkBalance();
         }
-        checkBalance();
+
+        function checkBalance() {
+            const rxn = REACTIONS[currentRxnIdx];
+            const leftCounts = {};
+            const rightCounts = {};
+            rxn.elements.forEach(el => { leftCounts[el] = 0; rightCounts[el] = 0; });
+
+            rxn.reactants.forEach((r, idx) => {
+                const coef = Math.max(1, parseInt(document.getElementById(`rxn-r-${idx}`).value) || 1);
+                for (const [el, qty] of Object.entries(r.atoms)) {
+                    leftCounts[el] = (leftCounts[el] || 0) + coef * qty;
+                }
+            });
+
+            rxn.products.forEach((p, idx) => {
+                const coef = Math.max(1, parseInt(document.getElementById(`rxn-p-${idx}`).value) || 1);
+                for (const [el, qty] of Object.entries(p.atoms)) {
+                    rightCounts[el] = (rightCounts[el] || 0) + coef * qty;
+                }
+            });
+
+            let allBalanced = true;
+            let tableRows = `<div class="grid grid-cols-4 font-bold text-slate-500 border-b border-slate-200 pb-1 mb-1 text-[11px]">
+                <span>Elemento</span><span class="text-center">Reactivos</span><span class="text-center">Productos</span><span class="text-right">Estado</span>
+            </div>`;
+
+            rxn.elements.forEach(el => {
+                const l = leftCounts[el];
+                const r = rightCounts[el];
+                const ok = l === r;
+                if (!ok) allBalanced = false;
+                tableRows += `<div class="grid grid-cols-4 items-center py-0.5 font-mono ${ok ? 'text-emerald-800 font-semibold' : 'text-slate-700'}">
+                    <span class="font-bold">${el}</span>
+                    <span class="text-center">${l}</span>
+                    <span class="text-center">${r}</span>
+                    <span class="text-right">${ok ? '✅ Igual' : '❌ Desigual'}</span>
+                </div>`;
+            });
+
+            document.getElementById('balance-table').innerHTML = tableRows;
+            const statusEl = document.getElementById('balance-status');
+
+            if (allBalanced) {
+                statusEl.className = "p-3 rounded-xl text-xs font-semibold bg-emerald-100 text-emerald-950 border border-emerald-300";
+                if (!rxnSolvedCurrent) {
+                    rxnSolvedCurrent = true;
+                    rxnTotalSolved++;
+                    addXP(30);
+                    document.getElementById('rxn-counter-badge').innerText = `Balanceadas: ${rxnTotalSolved}`;
+                }
+                statusEl.innerText = "🎉 ¡Ecuación balanceada correctamente! (+30 XP) Se cumple la Ley de Conservación de la Materia.";
+                document.getElementById('btn-next-rxn-solved').classList.remove('hidden');
+            } else {
+                statusEl.className = "p-3 rounded-xl text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200";
+                statusEl.innerText = "⚠️ Ajusta los coeficientes hasta que los átomos de reactivos y productos sean iguales.";
+                document.getElementById('btn-next-rxn-solved').classList.add('hidden');
+            }
+        }
+
+        function nextReaction() {
+            let nextIdx;
+            do {
+                nextIdx = Math.floor(Math.random() * REACTIONS.length);
+            } while (nextIdx === currentRxnIdx && REACTIONS.length > 1);
+            currentRxnIdx = nextIdx;
+            renderReaction();
+        }
+
+        renderReaction();
 
         // ==========================================
-        // CONEXIÓN DIRECTA EN STREAMING + BÚSQUEDA DE GOOGLE
+        // CONEXIÓN DIRECTA EN STREAMING (GEMINI LIVE)
         // ==========================================
         let chatHistory = [];
-        let xp = 0;
-
-        function addXP(points) {
-            xp += points;
-            document.getElementById('header-xp').innerText = `⭐ ${xp} XP`;
-        }
-
-        function isValidKey(key) {
-            return typeof key === 'string' && key.trim().length >= 15;
-        }
+        function isValidKey(key) { return key && key.trim().length > 15; }
 
         function updateGeminiStatus() {
-            const key = (localStorage.getItem('quimibio_gemini_key') || '').trim();
-            const searchOn = document.getElementById('use-google-search')?.checked !== false;
+            const key = localStorage.getItem('quimibio_gemini_key');
             const badge = document.getElementById('gemini-status-badge');
             if (isValidKey(key)) {
                 badge.className = "text-[11px] text-emerald-700 font-bold";
-                badge.innerText = searchOn
-                    ? "🟢 Conectado a Gemini 3.8 Flash • Streaming + Búsqueda Google"
-                    : "🟢 Conectado a Gemini 3.8 Flash • Streaming en Vivo";
+                badge.innerText = "🟢 Conectado Directo a Gemini 2.5 Flash (Streaming en Vivo)";
             } else {
                 badge.className = "text-[11px] text-amber-700 font-medium";
                 badge.innerText = "🟡 Modo Local • Haz clic en 'API Key' para activar Gemini en Vivo";
@@ -435,18 +591,9 @@
             updateGeminiStatus();
         }
 
-        document.getElementById('use-google-search').addEventListener('change', updateGeminiStatus);
-
-        function escapeHtml(txt) {
-            return String(txt)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;");
-        }
-
         function formatMarkdown(txt) {
-            return escapeHtml(txt)
+            return txt
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
         }
@@ -454,130 +601,18 @@
         function appendChat(sender, htmlText, isUser = false) {
             const chat = document.getElementById('chat-box');
             const div = document.createElement('div');
-            div.className = isUser
-                ? "bg-slate-200 text-slate-900 p-2.5 rounded-xl rounded-tr-none ml-auto max-w-[85%]"
+            div.className = isUser 
+                ? "bg-slate-200 text-slate-900 p-2.5 rounded-xl rounded-tr-none ml-auto max-w-[85%]" 
                 : "bg-blue-100 text-blue-950 p-2.5 rounded-xl rounded-tl-none max-w-[92%] leading-relaxed";
-            div.innerHTML = `<strong>${escapeHtml(sender)}:</strong> <span class="msg-body">${htmlText}</span>`;
+            div.innerHTML = `<strong>${sender}:</strong> ${htmlText}`;
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
-            return div.querySelector('.msg-body');
+            return div;
         }
 
         function askTutorAboutMolecule() {
-            switchTab('web4');
             document.getElementById('user-input').value = `Explícame brevemente la estructura, tipo de enlaces y usos de la molécula ${currentFormula} que acabo de modelar en 3D.`;
             sendMessage();
-        }
-
-        function localFallbackReply(question) {
-            const q = question.toLowerCase();
-            if (q.includes("h2o") || q.includes("agua")) {
-                return "El **agua (H₂O)** tiene enlaces covalentes polares y geometría angular (~104.5°). Sus puentes de hidrógeno explican su alto punto de ebullición y su papel como disolvente biológico.";
-            }
-            if (q.includes("c6h12o6") || q.includes("glucosa")) {
-                return "La **glucosa (C₆H₁₂O₆)** es una hexosa fundamental en el metabolismo energético celular (glucolisis y respiración celular). En disolución acuosa suele formar un anillo piranósico.";
-            }
-            return "Estoy en **Modo Local**. Conecta tu clave de Google AI Studio en el botón **API Key** para recibir respuestas en vivo con búsqueda en Google sobre: *" + escapeHtml(question) + "*.";
-        }
-
-        function extractSourcesFromCandidate(candidate) {
-            const sources = [];
-            const seen = new Set();
-            const chunks = candidate?.groundingMetadata?.groundingChunks || [];
-            for (const chunk of chunks) {
-                const uri = chunk?.web?.uri;
-                if (uri && !seen.has(uri)) {
-                    seen.add(uri);
-                    sources.push({
-                        title: chunk?.web?.title || uri,
-                        uri
-                    });
-                }
-            }
-            return sources;
-        }
-
-        async function streamGeminiResponse(apiKey, useSearch, bodyEl) {
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`;
-            const payload = {
-                system_instruction: {
-                    parts: [{
-                        text: "Eres un profesor de Química y Bioquímica para bachillerato de la UPAV. Responde en español de forma clara, didáctica y concisa. Usa la búsqueda de Google cuando necesites datos recientes, verificaciones o información externa."
-                    }]
-                },
-                contents: chatHistory,
-                generationConfig: {
-                    temperature: 0.4
-                }
-            };
-
-            if (useSearch) {
-                payload.tools = [{ google_search: {} }];
-            }
-
-            const resp = await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-
-            if (!resp.ok) {
-                const errText = await resp.text();
-                throw new Error(`HTTP ${resp.status}: ${errText.slice(0, 220)}`);
-            }
-
-            const reader = resp.body.getReader();
-            const decoder = new TextDecoder("utf-8");
-            let buffer = "";
-            let fullText = "";
-            let collectedSources = [];
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                buffer += decoder.decode(value, { stream: true });
-
-                const lines = buffer.split("\n");
-                buffer = lines.pop() || "";
-
-                for (const line of lines) {
-                    const trimmed = line.trim();
-                    if (!trimmed.startsWith("data:")) continue;
-                    const jsonStr = trimmed.slice(5).trim();
-                    if (!jsonStr || jsonStr === "[DONE]") continue;
-
-                    const parsed = JSON.parse(jsonStr);
-                    const candidate = parsed?.candidates?.[0];
-                    const parts = candidate?.content?.parts || [];
-                    for (const p of parts) {
-                        if (typeof p.text === "string") {
-                            fullText += p.text;
-                        }
-                    }
-
-                    const newSources = extractSourcesFromCandidate(candidate);
-                    for (const s of newSources) {
-                        if (!collectedSources.some(existing => existing.uri === s.uri)) {
-                            collectedSources.push(s);
-                        }
-                    }
-
-                    bodyEl.innerHTML = formatMarkdown(fullText || "Buscando...");
-                    document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
-                }
-            }
-
-            let finalHtml = formatMarkdown(fullText || "No se recibió texto en la respuesta.");
-            if (collectedSources.length > 0) {
-                const linksHtml = collectedSources
-                    .slice(0, 4)
-                    .map(s => `<li><a href="${escapeHtml(s.uri)}" target="_blank" rel="noopener noreferrer" class="underline text-blue-700 hover:text-blue-900">${escapeHtml(s.title)}</a></li>`)
-                    .join("");
-                finalHtml += `<div class="mt-2 pt-1.5 border-t border-blue-200 text-[11px] text-slate-700"><strong>Fuentes Google:</strong><ul class="list-disc ml-4 mt-0.5">${linksHtml}</ul></div>`;
-            }
-
-            bodyEl.innerHTML = finalHtml;
-            return fullText;
         }
 
         async function sendMessage() {
@@ -593,186 +628,245 @@
             btn.innerText = "...";
 
             const apiKey = (localStorage.getItem('quimibio_gemini_key') || '').trim();
-            const useSearch = document.getElementById('use-google-search')?.checked !== false;
-
-            chatHistory.push({
-                role: "user",
-                parts: [{ text }]
-            });
 
             if (isValidKey(apiKey)) {
-                const bodyEl = appendChat("Profesor IA", "▌");
-                try {
-                    const assistantText = await streamGeminiResponse(apiKey, useSearch, bodyEl);
-                    chatHistory.push({
-                        role: "model",
-                        parts: [{ text: assistantText || "" }]
-                    });
-                    addXP(10);
-                } catch (err) {
-                    chatHistory.pop();
-                    bodyEl.innerHTML = `<span class="text-red-700 font-semibold">Error de conexión:</span> ${escapeHtml(err.message)}`;
+                const bubble = appendChat("Profesor IA", "▌");
+                const systemPrompt = "Eres un profesor de Química y Bioquímica para bachillerato de la UPAV. Responde en español de forma clara, directa y concisa (máximo 3 párrafos cortos).";
+                chatHistory.push({ role: "user", parts: [{ text: text }] });
+
+                const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+                let streamedFullText = "";
+                let connected = false;
+                let lastError = "";
+
+                for (const model of models) {
+                    try {
+                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                systemInstruction: { parts: [{ text: systemPrompt }] },
+                                contents: chatHistory.slice(-4),
+                                generationConfig: { temperature: 0.5, maxOutputTokens: 500 }
+                            })
+                        });
+
+                        if (!response.ok) {
+                            const errJson = await response.json().catch(() => ({}));
+                            lastError = errJson.error?.message || `Error HTTP ${response.status}`;
+                            continue;
+                        }
+
+                        connected = true;
+                        const reader = response.body.getReader();
+                        const decoder = new TextDecoder("utf-8");
+                        let buffer = "";
+
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            buffer += decoder.decode(value, { stream: true });
+                            const lines = buffer.split("\n");
+                            buffer = lines.pop();
+
+                            for (const line of lines) {
+                                if (line.startsWith("data: ")) {
+                                    const jsonStr = line.slice(6).trim();
+                                    if (!jsonStr || jsonStr === "[DONE]") continue;
+                                    try {
+                                        const chunk = JSON.parse(jsonStr);
+                                        const piece = chunk.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                                        if (piece) {
+                                            streamedFullText += piece;
+                                            bubble.innerHTML = `<strong>Profesor IA:</strong> ${formatMarkdown(streamedFullText)} ▌`;
+                                            chat.scrollTop = chat.scrollHeight;
+                                        }
+                                    } catch (_) {}
+                                }
+                            }
+                        }
+                        break;
+                    } catch (e) {
+                        lastError = e.message;
+                    }
+                }
+
+                if (connected && streamedFullText) {
+                    bubble.innerHTML = `<strong>Profesor IA:</strong> ${formatMarkdown(streamedFullText)}`;
+                    chatHistory.push({ role: "model", parts: [{ text: streamedFullText }] });
+                } else {
+                    bubble.innerHTML = `<strong>⚠️ No se pudo conectar:</strong> ${lastError}. Verifica que tu API Key de Google AI Studio sea válida.`;
                 }
             } else {
-                const fallback = localFallbackReply(text);
-                appendChat("Profesor IA", fallback);
-                chatHistory.push({
-                    role: "model",
-                    parts: [{ text: fallback.replace(/<[^>]+>/g, "") }]
-                });
+                setTimeout(() => {
+                    appendChat("Profesor IA (Local)", `Haz clic en <strong>🔑 API Key</strong> y pega tu clave de Google AI Studio para activar las respuestas.`);
+                }, 250);
             }
 
             btn.disabled = false;
             btn.innerText = "Enviar";
-            chat.scrollTop = chat.scrollHeight;
         }
 
         // ==========================================
-        // WEB 3.0: ENTRENADOR ADAPTATIVO & INSIGNIAS
+        // WEB 3.0: ENTRENADOR ADAPTATIVO E INSIGNIAS
         // ==========================================
         const BADGES = [
-            { id: "atomo", name: "Explorador Atómico", icon: "⚛️", block: "Bloque I • Estructura Atómica", unlocked: false },
-            { id: "enlace", name: "Arquitecto de Enlaces", icon: "🧪", block: "Bloque II • Enlace Químico", unlocked: false },
-            { id: "estequio", name: "Maestro Estequiométrico", icon: "⚖️", block: "Bloque III • Estequiometría", unlocked: false },
-            { id: "termo", name: "Termodinámico UPAV", icon: "🔥", block: "Bloque IV • Termoquímica", unlocked: false },
-            { id: "organica", name: "Químico del Carbono", icon: "🧬", block: "Bloque V • Química Orgánica", unlocked: false },
-            { id: "bioquim", name: "Bioquímico Celular", icon: "🦠", block: "Bloque VI • Bioquímica", unlocked: false }
+            { id: 'atomo', icon: '⚛️', title: 'Bloque I: Estructura Atómica', desc: 'Protones, neutrones y tabla periódica', unlocked: false, folio: '' },
+            { id: 'enlaces', icon: '🔗', title: 'Bloque II: Enlaces Químicos', desc: 'Enlace iónico, covalente y metálico', unlocked: false, folio: '' },
+            { id: 'nomenclatura', icon: '🧪', title: 'Bloque III: Nomenclatura y Valencias', desc: 'Óxidos, hidróxidos, ácidos y sales', unlocked: false, folio: '' },
+            { id: 'estequio', icon: '⚖️', title: 'Bloque IV: Estequiometría y Mol', desc: 'Cálculo de masa molar y balanceo', unlocked: false, folio: '' },
+            { id: 'ph', icon: '🌡️', title: 'Bloque V: Ácidos, Bases y pH', desc: 'Escala de pH y neutralización', unlocked: false, folio: '' },
+            { id: 'bio', icon: '🧬', title: 'Bloque VI: Biomoléculas', desc: 'Carbohidratos, lípidos y proteínas', unlocked: false, folio: '' }
         ];
-
-        let score = 0;
-        let streak = 0;
-        let currentQuestion = null;
 
         function renderBadges() {
             const grid = document.getElementById('badges-grid');
             const unlockedCount = BADGES.filter(b => b.unlocked).length;
             document.getElementById('badges-progress-text').innerText = `${unlockedCount} / ${BADGES.length} Desbloqueadas`;
             grid.innerHTML = BADGES.map(b => `
-                <div class="p-3.5 rounded-xl border ${b.unlocked ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200 opacity-65'} flex items-center gap-3">
-                    <div class="text-2xl">${b.icon}</div>
+                <div class="border-2 ${b.unlocked ? 'border-emerald-300 bg-emerald-50/80' : 'border-slate-200 bg-slate-100 opacity-65'} p-4 rounded-xl flex items-start gap-3 transition-all">
+                    <div class="text-2xl bg-white p-2 rounded-xl shadow-sm">${b.unlocked ? b.icon : '🔒'}</div>
                     <div>
-                        <div class="font-bold text-xs sm:text-sm text-slate-900">${b.name}</div>
-                        <div class="text-[11px] text-slate-500">${b.block}</div>
-                        <div class="text-[10px] font-semibold mt-0.5 ${b.unlocked ? 'text-emerald-700' : 'text-slate-400'}">${b.unlocked ? '✅ Desbloqueada' : '🔒 Pendiente'}</div>
+                        <h3 class="font-bold text-slate-900 text-xs sm:text-sm">${b.title}</h3>
+                        <p class="text-[11px] text-slate-600 mt-0.5">${b.desc}</p>
+                        ${b.unlocked 
+                            ? `<span class="inline-block mt-1.5 text-[10px] font-mono bg-white text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">✅ Folio: ${b.folio}</span>`
+                            : `<span class="inline-block mt-1.5 text-[10px] text-slate-400">Bloqueada • Responde retos de este bloque</span>`}
                     </div>
                 </div>
-            `).join("");
+            `).join('');
         }
 
-        function buildRandomQuestion() {
-            const moles = Math.floor(Math.random() * 4) + 2;
-            const h2oMass = 18.015;
-            const totalGrams = (moles * h2oMass).toFixed(1);
-            const correctAns = `${moles} mol de H₂O`;
-            const distractors = [
-                `${moles * 2} mol de H₂O`,
-                `${(moles / 2).toFixed(1)} mol de H₂O`,
-                `${moles + 1} mol de H₂O`
-            ].filter(d => d !== correctAns).slice(0, 3);
-
-            const options = [correctAns, ...distractors].sort(() => Math.random() - 0.5);
-            return {
-                badgeId: "estequio",
-                category: "Bloque III • Estequiometría",
-                text: `Considerando que la masa molar del agua (H₂O) es ≈ 18.0 g/mol, ¿a cuántos moles equivalen aproximadamente ${totalGrams} g de agua?`,
-                options,
-                correct: correctAns,
-                explanation: `Divides la masa (${totalGrams} g) entre la masa molar aproximada del H₂O (18.0 g/mol), lo que resulta en ${correctAns}.`
-            };
+        function createDynamicQuestion() {
+            const generators = [
+                () => {
+                    const elems = [{ n: 'Carbono', z: 6 }, { n: 'Oxígeno', z: 8 }, { n: 'Sodio', z: 11 }, { n: 'Magnesio', z: 12 }, { n: 'Aluminio', z: 13 }, { n: 'Cloro', z: 17 }, { n: 'Potasio', z: 19 }, { n: 'Calcio', z: 20 }, { n: 'Hierro', z: 26 }];
+                    const el = elems[Math.floor(Math.random() * elems.length)];
+                    const neutrons = el.z + Math.floor(Math.random() * 5), massA = el.z + neutrons;
+                    return {
+                        badgeId: 'atomo', category: 'Bloque I • Estructura Atómica (Cálculo Dinámico)',
+                        text: `Un isótopo de ${el.n} tiene número atómico Z = ${el.z} y número de masa A = ${massA}. ¿Cuántos neutrones tiene en su núcleo?`,
+                        options: [{ text: `${neutrons} neutrones`, correct: true }, { text: `${massA + el.z} neutrones`, correct: false }, { text: `${el.z} neutrones`, correct: false }],
+                        hint: `Recuerda: Neutrones = Número de masa (A) − Número atómico (Z) = ${massA} − ${el.z}.`
+                    };
+                },
+                () => {
+                    const nH2O = Math.floor(Math.random() * 6) + 2, ans = (nH2O * 18).toFixed(0);
+                    return {
+                        badgeId: 'estequio', category: 'Bloque IV • Estequiometría y Mol (Cálculo Dinámico)',
+                        text: `Sabiendo que la masa molar del agua (H₂O) es 18 g/mol, ¿cuántos gramos pesan exactamente ${nH2O} moles de agua?`,
+                        options: [{ text: `${ans} gramos`, correct: true }, { text: `${(18 / nH2O).toFixed(1)} gramos`, correct: false }, { text: `${nH2O + 18} gramos`, correct: false }],
+                        hint: `Multiplica los moles (${nH2O}) por la masa molar (18 g/mol).`
+                    };
+                },
+                () => {
+                    const ph = (Math.random() * 13 + 0.5).toFixed(1);
+                    const type = ph < 6.8 ? 'Ácida' : (ph > 7.2 ? 'Básica o Alcalina' : 'Neutra');
+                    return {
+                        badgeId: 'ph', category: 'Bloque V • Ácidos, Bases y pH (Caso Aleatorio)',
+                        text: `En una práctica de laboratorio se mide una muestra con un pH de ${ph}. ¿Cómo se clasifica esta sustancia?`,
+                        options: [{ text: `Sustancia ${type}`, correct: true }, { text: `Sustancia ${type === 'Ácida' ? 'Básica o Alcalina' : 'Ácida'}`, correct: false }, { text: `Sustancia completamente Neutra (pH 7.0)`, correct: false }],
+                        hint: `Escala de pH (0 a 14): menor a 7 es ácido, 7 es neutro y mayor a 7 es básico.`
+                    };
+                },
+                () => {
+                    const cases = [
+                        { comp: 'NaCl (Cloruro de sodio)', ans: 'Enlace Iónico', w1: 'Enlace Covalente No Polar', w2: 'Enlace Metálico', hint: 'El Sodio (metal) cede 1 electrón al Cloro (no metal).' },
+                        { comp: 'CH₄ (Metano)', ans: 'Enlace Covalente', w1: 'Enlace Iónico', w2: 'Enlace Metálico', hint: 'Carbono e Hidrógeno comparten pares de electrones.' }
+                    ];
+                    const c = cases[Math.floor(Math.random() * cases.length)];
+                    return { badgeId: 'enlaces', category: 'Bloque II • Enlaces Químicos', text: `¿Qué tipo de enlace químico mantiene unidos a los átomos en ${c.comp}?`, options: [{ text: c.ans, correct: true }, { text: c.w1, correct: false }, { text: c.w2, correct: false }], hint: c.hint };
+                },
+                () => {
+                    const cases = [
+                        { f: 'H₂SO₄', name: 'Ácido sulfúrico (Oxiácido)', w1: 'Hidróxido de azufre', w2: 'Sal binaria', hint: 'Inicia con Hidrógeno (H) seguido de un no metal y Oxígeno.' },
+                        { f: 'Ca(OH)₂', name: 'Hidróxido de calcio (Base)', w1: 'Ácido carbónico', w2: 'Óxido ácido', hint: 'Contiene el grupo funcional hidroxilo (OH)⁻ unido a un metal.' }
+                    ];
+                    const c = cases[Math.floor(Math.random() * cases.length)];
+                    return { badgeId: 'nomenclatura', category: 'Bloque III • Nomenclatura Inorgánica', text: `¿A qué función química y nombre corresponde la fórmula ${c.f}?`, options: [{ text: c.name, correct: true }, { text: c.w1, correct: false }, { text: c.w2, correct: false }], hint: c.hint };
+                },
+                () => {
+                    const cases = [
+                        { q: '¿Qué enlace une a los aminoácidos para formar proteínas?', a: 'Enlace Peptídico', w1: 'Enlace Glucosídico', w2: 'Enlace Éster', hint: 'Une el grupo amino (-NH₂) con el carboxilo (-COOH).' },
+                        { q: '¿Cuál es la principal fuente de energía inmediata para las células (C₆H₁₂O₆)?', a: 'Carbohidratos (Glucosa)', w1: 'Ácidos Nucleicos (ADN)', w2: 'Sales Minerales', hint: 'La glucosa es el combustible celular primario.' }
+                    ];
+                    const c = cases[Math.floor(Math.random() * cases.length)];
+                    return { badgeId: 'bio', category: 'Bloque VI • Bioquímica y Biomoléculas', text: c.q, options: [{ text: c.a, correct: true }, { text: c.w1, correct: false }, { text: c.w2, correct: false }], hint: c.hint };
+                }
+            ];
+            const qObj = generators[Math.floor(Math.random() * generators.length)]();
+            qObj.options.sort(() => Math.random() - 0.5);
+            return qObj;
         }
 
         function generateNextQuestion() {
-            currentQuestion = buildRandomQuestion();
+            currentQuestion = createDynamicQuestion();
             document.getElementById('q-category').innerText = currentQuestion.category;
             document.getElementById('q-text').innerText = currentQuestion.text;
             document.getElementById('semantic-feedback').classList.add('hidden');
             document.getElementById('next-q-container').classList.add('hidden');
-
-            const optsDiv = document.getElementById('q-options');
-            optsDiv.innerHTML = "";
-            currentQuestion.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50 font-medium transition";
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(opt, btn);
-                optsDiv.appendChild(btn);
-            });
+            const letters = ['A', 'B', 'C'];
+            document.getElementById('q-options').innerHTML = currentQuestion.options.map((opt, idx) => `
+                <button onclick="answerQuestion(${idx})" id="opt-btn-${idx}" class="w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 transition font-medium">
+                    <span class="font-bold text-blue-800 mr-2">${letters[idx]})</span> ${opt.text}
+                </button>
+            `).join('');
         }
 
-        function checkAnswer(selected, clickedBtn) {
-            const allBtns = document.querySelectorAll('#q-options button');
-            allBtns.forEach(b => b.disabled = true);
-
+        function answerQuestion(idx) {
+            const chosen = currentQuestion.options[idx];
             const fb = document.getElementById('semantic-feedback');
-            fb.classList.remove('hidden');
+            fb.classList.remove('hidden', 'bg-red-100', 'text-red-950', 'bg-emerald-100', 'text-emerald-950');
+            currentQuestion.options.forEach((_, i) => document.getElementById(`opt-btn-${i}`).disabled = true);
 
-            if (selected === currentQuestion.correct) {
-                score += 1;
-                streak += 1;
-                addXP(20);
-                clickedBtn.classList.add("bg-emerald-100", "border-emerald-400", "text-emerald-950", "font-bold");
-                fb.className = "mt-4 p-3.5 rounded-xl text-xs sm:text-sm bg-emerald-50 border border-emerald-200 text-emerald-900";
-                fb.innerHTML = `<strong>¡Correcto!</strong> ${escapeHtml(currentQuestion.explanation)}`;
+            if (chosen.correct) {
+                score++; streak++; addXP(50);
+                document.getElementById('score-count').innerText = score;
+                document.getElementById('streak-count').innerText = streak;
                 const badge = BADGES.find(b => b.id === currentQuestion.badgeId);
+                let badgeMsg = "";
                 if (badge && !badge.unlocked) {
                     badge.unlocked = true;
+                    badge.folio = 'UPAV-' + Math.random().toString(36).substring(2, 8).toUpperCase();
                     renderBadges();
+                    badgeMsg = `<br>🏅 <strong>¡Nueva Insignia Desbloqueada!</strong> Has obtenido <em>${badge.title}</em> (Folio: ${badge.folio}).`;
                 }
+                fb.classList.add('bg-emerald-100', 'text-emerald-950', 'border', 'border-emerald-300');
+                fb.innerHTML = `✅ <strong>¡Excelente! (+50 XP)</strong> Respuesta correcta.${badgeMsg}`;
             } else {
                 streak = 0;
-                clickedBtn.classList.add("bg-red-100", "border-red-400", "text-red-950");
-                fb.className = "mt-4 p-3.5 rounded-xl text-xs sm:text-sm bg-amber-50 border border-amber-200 text-amber-900";
-                fb.innerHTML = `<strong>Respuesta correcta: ${escapeHtml(currentQuestion.correct)}.</strong> ${escapeHtml(currentQuestion.explanation)}`;
+                document.getElementById('streak-count').innerText = streak;
+                fb.classList.add('bg-red-100', 'text-red-950', 'border', 'border-red-300');
+                fb.innerHTML = `⚠️ <strong>Ruta Semántica Activada:</strong> ${currentQuestion.hint}`;
             }
-
-            document.getElementById('score-count').innerText = score;
-            document.getElementById('streak-count').innerText = streak;
             document.getElementById('next-q-container').classList.remove('hidden');
         }
 
         renderBadges();
         generateNextQuestion();
 
-        // ==========================================
-        // WEB 2.0: COMUNIDAD SABATINA UPAV
-        // ==========================================
-        let posts = [
-            { sede: "Xalapa", author: "Asesor Química UPAV", text: "Recuerden balancear primero metales y no metales antes que H y O en combustiones." },
-            { sede: "Veracruz", author: "Estudiante Bachillerato", text: "Modelar C6H12O6 en 3D ayuda muchísimo a visualizar el anillo de la glucosa." }
+        const posts = [
+            { author: "Profa. Elena Martínez (Asesora UPAV)", sede: "Xalapa", text: "Tip para el sábado: usen el Entrenador Infinito de la pestaña Web 3.0 para desbloquear sus 6 insignias y muéstrenme sus folios en la asesoría." },
+            { author: "Ana Sofía Ruiz (Estudiante)", sede: "Veracruz", text: "Regla mnemotécnica para los bioelementos primarios: CHONPS (Carbono, Hidrógeno, Oxígeno, Nitrógeno, Fósforo y Azufre)." }
         ];
-
-        function filterPosts() {
-            const sede = document.getElementById('sede-select').value;
-            const list = document.getElementById('forum-list');
-            const filtered = sede === "Todas" ? posts : posts.filter(p => p.sede === sede || sede === "Todas");
-            const itemsToShow = filtered.length ? filtered : posts;
-            list.innerHTML = itemsToShow.map(p => `
-                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm">
-                    <div class="flex justify-between items-center mb-1">
-                        <strong class="text-blue-900">${escapeHtml(p.author)}</strong>
-                        <span class="text-[11px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-semibold">${escapeHtml(p.sede)}</span>
-                    </div>
-                    <p class="text-slate-700">${escapeHtml(p.text)}</p>
+        function renderPosts() {
+            const s = document.getElementById('sede-select').value;
+            document.getElementById('forum-list').innerHTML = posts.filter(p => s === 'Todas' || p.sede === s).map(p => `
+                <div class="p-3.5 bg-slate-50 rounded-xl border text-xs sm:text-sm">
+                    <strong class="text-blue-900">${p.author} • <span class="text-emerald-700">Sede ${p.sede}</span></strong>
+                    <p class="mt-1 text-slate-700">${p.text}</p>
                 </div>
-            `).join("");
+            `).join('');
         }
-
+        function filterPosts() { renderPosts(); }
         function addPost() {
-            const inp = document.getElementById('post-input');
-            const txt = inp.value.trim();
-            if (!txt) return;
-            const sede = document.getElementById('sede-select').value;
-            posts.unshift({
-                sede: sede === "Todas" ? "Xalapa" : sede,
-                author: "Tú (UPAV)",
-                text: txt
-            });
-            inp.value = "";
-            addXP(5);
-            filterPosts();
+            const i = document.getElementById('post-input');
+            if (i.value.trim()) {
+                posts.unshift({ author: "Tú (Comunidad UPAV)", sede: document.getElementById('sede-select').value === 'Todas' ? 'Xalapa' : document.getElementById('sede-select').value, text: i.value });
+                i.value = ''; renderPosts();
+            }
         }
-
-        filterPosts();
+        renderPosts();
     </script>
 </body>
 </html>
